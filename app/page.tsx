@@ -376,7 +376,7 @@ export default function Home() {
       65, 68, 72, 71, 68, 67, 68, 70,
       67, 63, 63, -1, 67, 72, 75, 74,
       72, 75, 72, 74, 72, 68, 70, 67,
-      67, -1, 65, 68, 72, 71, 68, 67,
+      67, -1, 65, 68, 72, 71, 67, -1,
     ];
     const bass = [48, 46, 44, 43, 41, 48, 43, 48];
     const chords = [
@@ -402,11 +402,14 @@ export default function Home() {
       });
     };
     const playStep = () => {
-      const note = melody[step % melody.length];
+      const position = step % melody.length;
+      const note = melody[position];
       const bar = Math.floor(step / 8) % 8;
       const emotionalArc = [0.72, 0.76, 0.8, 0.84, 0.92, 1, 1.08, 0.82][bar];
-      if (note > 0) {
-        ring(note, 0.044 * emotionalArc, bar >= 8 ? 2.05 : 1.75);
+      const heldAcrossLoop = position === 0 && step > 0;
+      if (note > 0 && !heldAcrossLoop) {
+        const decay = position === melody.length - 2 ? 3.4 : bar >= 6 ? 2.05 : 1.75;
+        ring(note, 0.044 * emotionalArc, decay);
         if (bar >= 4 && step % 8 === 0) ring(note - 12, 0.011 * emotionalArc, 2.8);
         if (bar === 5 || bar === 6) ring(note + 12, 0.007, 1.25);
       }
