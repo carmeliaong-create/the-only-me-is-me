@@ -58,7 +58,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "close the notebook.",
-        response: "you did not finish it. perhaps you were lazy. perhaps you were tired. perhaps tired is what lazy people call themselves when they want mercy.",
+        response: "you did not finish it. you call it laziness. later, you call it exhaustion. the name changes when you want mercy.",
       },
       {
         label: "leave it open.",
@@ -88,7 +88,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "look at them.",
-        response: "they see that you saw. you do nothing else. perhaps that was kind. perhaps kindness is what we call the smallest available action.",
+        response: "they see that you saw. you do nothing else. it may have been kind. kindness is sometimes the smallest available action.",
       },
       {
         label: "leave a napkin beside them.",
@@ -145,7 +145,7 @@ const scenes: Scene[] = [
       },
       {
         label: "say, “at least i didn’t miss tomorrow.”",
-        response: "you laugh. the ceiling does not. you get up anyway. perhaps this counts. you are always asking what counts.",
+        response: "you laugh. the ceiling does not. you get up anyway. you decide this counts. you are always asking what counts.",
       },
     ],
   },
@@ -190,7 +190,7 @@ const scenes: Scene[] = [
       },
       {
         label: "say, “thank you for visiting.”",
-        response: "you do not know who you are thanking. perhaps no one. gratitude does not require a recipient to occur.",
+        response: "you do not know who you are thanking. there may be no one. gratitude occurs without a recipient.",
       },
     ],
   },
@@ -291,14 +291,14 @@ const scenes: Scene[] = [
       },
       {
         label: "let it reach you.",
-        response: "the light reaches you exactly as before. you receive it differently. perhaps this is what change looks like from inside it.",
+        response: "the light reaches you exactly as before. you receive it differently. from inside, change looks like this.",
       },
     ],
   },
   {
     part: "III / RETURN",
     title: "you are sitting beside someone you love. the clock is loud.",
-    body: "you have been here before. not here exactly. time does not circle, but you do. perhaps returning is how you learn what changed.",
+    body: "you have been here before. not here exactly. time does not circle, but you do. returning shows you what changed.",
     choices: [
       {
         label: "say nothing for a moment. then speak.",
