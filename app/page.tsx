@@ -69,7 +69,7 @@ const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
     title: "you leave work while the sun is setting.",
-    body: "you could stop. you have things to do. one can always do more.",
+    body: "you could stop. you have things to do. the screen will wait.",
     choices: [
       {
         label: "keep walking.",
@@ -312,7 +312,7 @@ const scenes: Scene[] = [
   },
 ];
 
-function TypeText({ text, as: Tag = "h2", className = "", speed = 105 }: { text: string; as?: "h1" | "h2" | "p"; className?: string; speed?: number }) {
+function TypeText({ text, as: Tag = "h2", className = "", speed = 86 }: { text: string; as?: "h1" | "h2" | "p"; className?: string; speed?: number }) {
   const [shown, setShown] = useState("");
 
   useEffect(() => {
@@ -496,7 +496,7 @@ export default function Home() {
           {!reflection ? <>
             <p className="eyebrow">PART {scene.part}</p>
             <TypeText key={`question-${index}`} text={scene.title} />
-            {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={48} />}
+            {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} />}
             <div className="choices">
               {scene.choices.map((choice, i) => (
                 <button key={choice.label} onClick={() => choose(i)}>
@@ -517,7 +517,7 @@ export default function Home() {
         </section>
       )}
 
-      <footer><span>ONE CAN ALWAYS DO MORE.</span><span>© NOW</span></footer>
+      <footer><span>TIME PASSES ANYWAY.</span><span>© NOW</span></footer>
     </main>
   );
 }
