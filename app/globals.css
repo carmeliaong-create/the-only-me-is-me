@@ -35,6 +35,9 @@ h2 { max-width:800px; font-size:clamp(28px,4.5vw,56px); font-weight:500; letter-
 .reflection h2 { max-width:850px; margin-bottom:42px; }
 .ending { text-align:center; max-width:760px; }
 .closing { max-width:650px; }
+.final-message { margin:-12px auto 34px; color:var(--ink); font-size:13px; line-height:2; letter-spacing:.04em; }
+.final-message strong { font-weight:500; }
+.final-message em { color:var(--dim); }
 .pathline { display:flex; justify-content:center; gap:7px; margin:0 auto 36px; }
 .pathline i { width:18px; height:2px; background:#e8e8e3; box-shadow:0 0 5px #fff; }
 .pathline i.dim { background:#555; box-shadow:none; }

@@ -204,6 +204,7 @@ export default function Home() {
           <p className="eyebrow">RUN COMPLETE</p>
           <h1>NOTHING<br />RESOLVED.</h1>
           <p className="closing">You chose. Time passed. What is gone remains gone. You remain.</p>
+          <p className="final-message"><strong>I love you. I always will.</strong><br /><em>Take care, my friend.</em></p>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
           <button className="primary" onClick={restart}>RESTART <span>↺</span></button>
         </section>
@@ -238,4 +239,3 @@ export default function Home() {
     </main>
   );
 }
-
