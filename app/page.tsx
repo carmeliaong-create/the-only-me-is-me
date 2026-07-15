@@ -235,6 +235,81 @@ const scenes: Scene[] = [
       },
     ],
   },
+  {
+    part: "III / RETURN",
+    title: "you pass a place you once knew by heart.",
+    body: "the building is still there. the people inside it are not the people you remember. you had expected the place to keep your version of itself.",
+    choices: [
+      {
+        label: "go inside.",
+        response: "the room is smaller. you are disappointed by this, as though memory had promised accurate measurements.",
+      },
+      {
+        label: "keep walking.",
+        response: "you preserve the room by refusing to see it. this is one way of caring for something. it is also one way of losing it twice.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "someone forgives you before you finish apologizing.",
+    body: "you had prepared evidence. you had prepared a sentence. without punishment, you do not know where to put either one.",
+    choices: [
+      {
+        label: "believe them.",
+        response: "you try. belief arrives slowly. you have practiced the opposite for longer.",
+      },
+      {
+        label: "explain why they should not.",
+        response: "you ask them to reconsider their mercy. they do not. you wonder why their judgment only counts when it hurts.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "you notice that you have become someone your younger self needed.",
+    body: "not entirely. not consistently. enough to recognize the shape.",
+    choices: [
+      {
+        label: "allow yourself to be proud.",
+        response: "pride feels suspicious. you let it stay for one minute. then another. nothing terrible happens.",
+      },
+      {
+        label: "list what is still wrong.",
+        response: "the list is accurate. it is not complete. accuracy and completeness have never been the same thing.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "the same kind of morning arrives again.",
+    body: "light through the blinds. an unfinished day. you are not the person you were the first time. you are not free of them either.",
+    choices: [
+      {
+        label: "turn away.",
+        response: "you turn away. this time, you do not build a case against yourself. you are tired. the light will still be there.",
+      },
+      {
+        label: "let it reach you.",
+        response: "the light reaches you exactly as before. you receive it differently. perhaps this is what change looks like from inside it.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "you are sitting beside someone you love. the clock is loud.",
+    body: "you have been here before. not here exactly. time does not circle, but you do. perhaps returning is how you learn what changed.",
+    choices: [
+      {
+        label: "say nothing for a moment. then speak.",
+        response: "the silence was not failure. the speaking is not rescue. both belong to you. you tell them anyway.",
+      },
+      {
+        label: "take their hand.",
+        response: "you cannot stop the clock. you do not need to. for one moment, you are not asking the moment to last in order to let it matter.",
+      },
+    ],
+  },
 ];
 
 function TypeText({ text, as: Tag = "h2", className = "" }: { text: string; as?: "h1" | "h2" | "p"; className?: string }) {
@@ -251,7 +326,7 @@ function TypeText({ text, as: Tag = "h2", className = "" }: { text: string; as?:
       position += 1;
       setShown(text.slice(0, position));
       if (position >= text.length) window.clearInterval(timer);
-    }, 68);
+    }, 100);
     return () => window.clearInterval(timer);
   }, [text]);
 
@@ -299,6 +374,7 @@ export default function Home() {
       65, 69, 72, 76, 74, 71, 72, -1,
     ];
     const bass = [48, 43, 45, 41];
+    const chords = [[60, 64, 67], [59, 62, 67], [57, 60, 64], [53, 57, 60]];
     let step = 0;
     const ring = (midi: number, volume: number, decay = 1.6) => {
       const now = audio.currentTime;
@@ -324,6 +400,7 @@ export default function Home() {
         const bar = Math.floor(step / 8) % 4;
         ring(bass[bar], 0.021, 2.4);
         ring(bass[bar] + 7, 0.012, 2.1);
+        chords[bar].forEach((midi, i) => ring(midi, 0.009 - i * 0.0015, 3.1));
       } else if (step % 8 === 4) {
         const bar = Math.floor(step / 8) % 4;
         ring(bass[bar] + 12, 0.012, 1.8);
@@ -400,15 +477,15 @@ export default function Home() {
           <p className="eyebrow">A GAME ABOUT GUILT, TIME + GRIEF</p>
           <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
           <p className="byline">by carm</p>
-          <p className="lede">there is no correct path. you will still look for one.</p>
+          <p className="lede">there is no correct path, but you can look for one.</p>
           <button className="primary" onClick={begin}>BEGIN <span>↵</span></button>
-          <p className="hint">15 SCENES · 5–7 MINUTES</p>
+          <p className="hint">20 SCENES · 8–10 MINUTES</p>
         </section>
       ) : finished ? (
         <section className="ending">
           <p className="eyebrow">YOUR PATH</p>
           <h1>YOU CHOSE.<br />TIME PASSED.</h1>
-          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. then you accused yourself of making excuses. nothing was settled. you are still here. perhaps that is not a defense. perhaps it does not need to be.</p>
+          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. then you accused yourself of making excuses. nothing was settled. that was never the same as nothing changing. you returned to the beginning and found that you were not where you started. you are still here. perhaps that is not a defense. perhaps it does not need to be.</p>
           <p className="final-message"><strong>I love you. I always will.</strong><br /><em>Take care, my friend.</em></p>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
           <button className="primary" onClick={restart}>BEGIN AGAIN <span>↺</span></button>
