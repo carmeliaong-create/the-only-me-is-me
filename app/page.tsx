@@ -366,15 +366,28 @@ export default function Home() {
     master.connect(tone).connect(audio.destination);
     tone.connect(delay).connect(echo).connect(audio.destination);
 
-    // Four bars of 4/4, written as eighth notes at 84 BPM.
+    // An original twelve-bar music-box waltz: 3/4, eighth notes at 72 BPM.
+    // The full phrase lasts thirty seconds before returning to its beginning.
     const melody = [
-      72, 76, 79, 76, 74, 72, 69, -1,
-      71, 74, 79, 74, 72, 71, 67, -1,
-      69, 72, 76, 79, 76, 72, 69, 67,
-      65, 69, 72, 76, 74, 71, 72, -1,
+      74, 77, 81, 84, 81, 77,
+      72, 76, 79, 81, 79, 76,
+      74, 76, 77, 81, 77, 74,
+      69, 72, 76, 77, 76, 72,
+      70, 74, 77, 82, 81, 77,
+      72, 75, 79, 84, 79, 75,
+      74, 77, 81, 86, 84, 81,
+      76, 79, 81, 84, 81, 79,
+      77, 81, 84, 89, 86, 84,
+      76, 79, 84, 86, 84, 79,
+      74, 77, 81, 79, 76, 72,
+      69, 72, 74, 77, 74, -1,
     ];
-    const bass = [48, 43, 45, 41];
-    const chords = [[60, 64, 67], [59, 62, 67], [57, 60, 64], [53, 57, 60]];
+    const bass = [50, 45, 46, 43, 46, 48, 50, 45, 41, 48, 50, 45];
+    const chords = [
+      [62, 65, 69], [60, 64, 69], [58, 62, 65], [55, 58, 62],
+      [58, 62, 65], [60, 63, 67], [62, 65, 69], [60, 64, 69],
+      [57, 60, 65], [60, 64, 67], [62, 65, 69], [57, 61, 64],
+    ];
     let step = 0;
     const ring = (midi: number, volume: number, decay = 1.6) => {
       const now = audio.currentTime;
@@ -396,19 +409,19 @@ export default function Home() {
     const playStep = () => {
       const note = melody[step % melody.length];
       if (note > 0) ring(note, 0.047);
-      if (step % 8 === 0) {
-        const bar = Math.floor(step / 8) % 4;
+      if (step % 6 === 0) {
+        const bar = Math.floor(step / 6) % 12;
         ring(bass[bar], 0.021, 2.4);
         ring(bass[bar] + 7, 0.012, 2.1);
         chords[bar].forEach((midi, i) => ring(midi, 0.009 - i * 0.0015, 3.1));
-      } else if (step % 8 === 4) {
-        const bar = Math.floor(step / 8) % 4;
-        ring(bass[bar] + 12, 0.012, 1.8);
+      } else if (step % 6 === 2 || step % 6 === 4) {
+        const bar = Math.floor(step / 6) % 12;
+        ring(chords[bar][(step % 6) === 2 ? 1 : 2], 0.009, 1.7);
       }
       step += 1;
     };
     playStep();
-    const timer = window.setInterval(playStep, 357);
+    const timer = window.setInterval(playStep, 416.667);
     musicRef.current = { master, timer };
     setSoundOn(true);
   }
