@@ -366,27 +366,27 @@ export default function Home() {
     master.connect(tone).connect(audio.destination);
     tone.connect(delay).connect(echo).connect(audio.destination);
 
-    // An original twelve-bar music-box waltz: 3/4, eighth notes at 72 BPM.
-    // The full phrase lasts thirty seconds before returning to its beginning.
+    // An original eleven-bar music-box theme in 4/4 at 90 BPM.
+    // It follows the supplied G–C–G–C / G–D–Em–D–C–Em–D harmony and
+    // completes its full arc in just under thirty seconds.
     const melody = [
-      74, 77, 81, 84, 81, 77,
-      72, 76, 79, 81, 79, 76,
-      74, 76, 77, 81, 77, 74,
-      69, 72, 76, 77, 76, 72,
-      70, 74, 77, 82, 81, 77,
-      72, 75, 79, 84, 79, 75,
-      74, 77, 81, 86, 84, 81,
-      76, 79, 81, 84, 81, 79,
-      77, 81, 84, 89, 86, 84,
-      76, 79, 84, 86, 84, 79,
-      74, 77, 81, 79, 76, 72,
-      69, 72, 74, 77, 74, -1,
+      74, 79, 83, 86, 83, 79, 74, -1,
+      76, 79, 84, 88, 84, 81, 79, -1,
+      71, 74, 79, 83, 81, 79, 74, 71,
+      72, 76, 79, 84, 83, 79, 76, -1,
+      74, 79, 83, 86, 88, 86, 83, 79,
+      74, 78, 81, 86, 81, 78, 74, -1,
+      76, 79, 83, 88, 86, 83, 79, 76,
+      78, 81, 86, 90, 86, 83, 81, 78,
+      79, 84, 88, 91, 88, 84, 81, 79,
+      83, 88, 91, 95, 91, 88, 86, 83,
+      81, 86, 90, 93, 90, 86, 81, -1,
     ];
-    const bass = [50, 45, 46, 43, 46, 48, 50, 45, 41, 48, 50, 45];
+    const bass = [43, 48, 43, 48, 43, 50, 52, 50, 48, 52, 50];
     const chords = [
-      [62, 65, 69], [60, 64, 69], [58, 62, 65], [55, 58, 62],
-      [58, 62, 65], [60, 63, 67], [62, 65, 69], [60, 64, 69],
-      [57, 60, 65], [60, 64, 67], [62, 65, 69], [57, 61, 64],
+      [55, 59, 62], [60, 64, 67], [55, 59, 62], [60, 64, 67],
+      [55, 59, 62], [62, 66, 69], [64, 67, 71], [62, 66, 69],
+      [60, 64, 67], [64, 67, 71], [62, 66, 69],
     ];
     let step = 0;
     const ring = (midi: number, volume: number, decay = 1.6) => {
@@ -408,24 +408,25 @@ export default function Home() {
     };
     const playStep = () => {
       const note = melody[step % melody.length];
-      const bar = Math.floor(step / 6) % 12;
-      const emotionalArc = [0.72, 0.76, 0.8, 0.84, 0.9, 0.96, 1.02, 1.08, 1.18, 1.12, 0.96, 0.78][bar];
+      const bar = Math.floor(step / 8) % 11;
+      const emotionalArc = [0.68, 0.72, 0.76, 0.8, 0.86, 0.92, 1, 1.08, 1.16, 1.22, 0.88][bar];
       if (note > 0) {
         ring(note, 0.044 * emotionalArc, bar >= 8 ? 2.05 : 1.75);
-        if (bar >= 6 && step % 6 === 0) ring(note - 12, 0.013 * emotionalArc, 2.8);
+        if (bar >= 6 && step % 8 === 0) ring(note - 12, 0.013 * emotionalArc, 2.8);
         if (bar === 8 || bar === 9) ring(note + 12, 0.008, 1.25);
       }
-      if (step % 6 === 0) {
+      if (step % 8 === 0) {
         ring(bass[bar], 0.018 * emotionalArc, 2.7);
         ring(bass[bar] + 7, 0.01 * emotionalArc, 2.3);
         chords[bar].forEach((midi, i) => ring(midi, (0.0078 - i * 0.0012) * emotionalArc, 3.4));
-      } else if (step % 6 === 2 || step % 6 === 4) {
-        ring(chords[bar][(step % 6) === 2 ? 1 : 2], 0.008 * emotionalArc, 1.9);
+      } else if (step % 8 === 2 || step % 8 === 4 || step % 8 === 6) {
+        const chordNote = step % 8 === 2 ? 1 : step % 8 === 4 ? 2 : 0;
+        ring(chords[bar][chordNote] + 12, 0.0075 * emotionalArc, 1.75);
       }
       step += 1;
     };
     playStep();
-    const timer = window.setInterval(playStep, 416.667);
+    const timer = window.setInterval(playStep, 333.333);
     musicRef.current = { master, timer };
     setSoundOn(true);
   }
