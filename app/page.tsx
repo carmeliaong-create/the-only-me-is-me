@@ -361,8 +361,8 @@ export default function Home() {
     master.gain.value = 0.55;
     tone.type = "lowpass";
     tone.frequency.value = 3800;
-    delay.delayTime.value = 0.19;
-    echo.gain.value = 0.16;
+    delay.delayTime.value = 0.27;
+    echo.gain.value = 0.22;
     master.connect(tone).connect(audio.destination);
     tone.connect(delay).connect(echo).connect(audio.destination);
 
@@ -408,15 +408,19 @@ export default function Home() {
     };
     const playStep = () => {
       const note = melody[step % melody.length];
-      if (note > 0) ring(note, 0.047);
+      const bar = Math.floor(step / 6) % 12;
+      const emotionalArc = [0.72, 0.76, 0.8, 0.84, 0.9, 0.96, 1.02, 1.08, 1.18, 1.12, 0.96, 0.78][bar];
+      if (note > 0) {
+        ring(note, 0.044 * emotionalArc, bar >= 8 ? 2.05 : 1.75);
+        if (bar >= 6 && step % 6 === 0) ring(note - 12, 0.013 * emotionalArc, 2.8);
+        if (bar === 8 || bar === 9) ring(note + 12, 0.008, 1.25);
+      }
       if (step % 6 === 0) {
-        const bar = Math.floor(step / 6) % 12;
-        ring(bass[bar], 0.021, 2.4);
-        ring(bass[bar] + 7, 0.012, 2.1);
-        chords[bar].forEach((midi, i) => ring(midi, 0.009 - i * 0.0015, 3.1));
+        ring(bass[bar], 0.018 * emotionalArc, 2.7);
+        ring(bass[bar] + 7, 0.01 * emotionalArc, 2.3);
+        chords[bar].forEach((midi, i) => ring(midi, (0.0078 - i * 0.0012) * emotionalArc, 3.4));
       } else if (step % 6 === 2 || step % 6 === 4) {
-        const bar = Math.floor(step / 6) % 12;
-        ring(chords[bar][(step % 6) === 2 ? 1 : 2], 0.009, 1.7);
+        ring(chords[bar][(step % 6) === 2 ? 1 : 2], 0.008 * emotionalArc, 1.9);
       }
       step += 1;
     };
