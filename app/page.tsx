@@ -251,7 +251,7 @@ function TypeText({ text, as: Tag = "h2", className = "" }: { text: string; as?:
       position += 1;
       setShown(text.slice(0, position));
       if (position >= text.length) window.clearInterval(timer);
-    }, 34);
+    }, 68);
     return () => window.clearInterval(timer);
   }, [text]);
 
@@ -291,11 +291,17 @@ export default function Home() {
     master.connect(tone).connect(audio.destination);
     tone.connect(delay).connect(echo).connect(audio.destination);
 
-    const melody = [72, 76, 79, 83, 79, 76, 69, 72, 76, 81, 79, 76, 67, 71, 74, 79];
+    // Four bars of 4/4, written as eighth notes at 84 BPM.
+    const melody = [
+      72, 76, 79, 76, 74, 72, 69, -1,
+      71, 74, 79, 74, 72, 71, 67, -1,
+      69, 72, 76, 79, 76, 72, 69, 67,
+      65, 69, 72, 76, 74, 71, 72, -1,
+    ];
+    const bass = [48, 43, 45, 41];
     let step = 0;
-    const playBell = () => {
+    const ring = (midi: number, volume: number, decay = 1.6) => {
       const now = audio.currentTime;
-      const midi = melody[step % melody.length];
       const frequency = 440 * Math.pow(2, (midi - 69) / 12);
       [1, 2.01, 3.98].forEach((multiple, i) => {
         const oscillator = audio.createOscillator();
@@ -304,16 +310,28 @@ export default function Home() {
         oscillator.frequency.value = frequency * multiple;
         oscillator.detune.value = i * 2;
         gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(i === 0 ? 0.055 : 0.018 / i, now + 0.012);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4 - i * 0.22);
+        gain.gain.exponentialRampToValueAtTime(i === 0 ? volume : volume * 0.22 / Math.max(i, 1), now + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + decay - i * 0.18);
         oscillator.connect(gain).connect(master);
         oscillator.start(now);
-        oscillator.stop(now + 1.5);
+        oscillator.stop(now + decay + 0.1);
       });
+    };
+    const playStep = () => {
+      const note = melody[step % melody.length];
+      if (note > 0) ring(note, 0.047);
+      if (step % 8 === 0) {
+        const bar = Math.floor(step / 8) % 4;
+        ring(bass[bar], 0.021, 2.4);
+        ring(bass[bar] + 7, 0.012, 2.1);
+      } else if (step % 8 === 4) {
+        const bar = Math.floor(step / 8) % 4;
+        ring(bass[bar] + 12, 0.012, 1.8);
+      }
       step += 1;
     };
-    playBell();
-    const timer = window.setInterval(playBell, 520);
+    playStep();
+    const timer = window.setInterval(playStep, 357);
     musicRef.current = { master, timer };
     setSoundOn(true);
   }
@@ -381,6 +399,7 @@ export default function Home() {
         <section className="intro">
           <p className="eyebrow">A GAME ABOUT GUILT, TIME + GRIEF</p>
           <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
+          <p className="byline">by carm</p>
           <p className="lede">there is no correct path. you will still look for one.</p>
           <button className="primary" onClick={begin}>BEGIN <span>↵</span></button>
           <p className="hint">15 SCENES · 5–7 MINUTES</p>
