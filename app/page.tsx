@@ -8,136 +8,231 @@ type Scene = { part: string; title: string; body?: string; choices: Choice[] };
 const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
-    title: "THE ROOM IS QUIET. THE CLOCK IS NOT.",
-    body: "You could tell them. You could let the moment close.",
+    title: "you are sitting beside someone you love. the clock is loud.",
+    body: "you could tell them what they mean to you. you could also wait. waiting feels harmless while you are doing it.",
     choices: [
-      { label: "Say nothing.", response: "YOU SAID NOTHING. THE MOMENT CLOSED." },
-      { label: "Tell them: “You make me want to stop running.”", response: "YOU SAID IT. NOW IT EXISTS." },
+      {
+        label: "say nothing.",
+        response: "you were afraid. that is true. you loved them. that is also true. one truth does not cancel the other.",
+      },
+      {
+        label: "tell them: “you make me feel like i could stop running.”",
+        response: "you said it. now it exists outside you. this is what you wanted. you are still afraid.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "MORNING ARRIVES.",
-    body: "It does not ask what happened.",
+    title: "morning arrives. you have not slept.",
+    body: "the light comes in through the blinds. it is not forgiving you. it is not accusing you. it is light.",
     choices: [
-      { label: "Turn away.", response: "THE LIGHT MOVES ON." },
-      { label: "Stay still.", response: "IT REACHES YOU. NO VERDICT FOLLOWS." },
+      {
+        label: "turn away.",
+        response: "you turn away because you are tired. later, you may call it avoidance. there are always more precise charges available.",
+      },
+      {
+        label: "let it reach you.",
+        response: "you lie still. nothing changes. for a moment, you do not require change.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "A CHILD ASKS IF YOU ARE OLD.",
+    title: "a child asks if you are old.",
+    body: "you are not old. you are older than you were. this has been happening the entire time.",
     choices: [
-      { label: "“No. I’m cool.”", response: "THE CHILD DOES NOT BELIEVE YOU." },
-      { label: "“WE ARE ALL DECAYING.”", response: "THE CHILD LEAVES." },
+      {
+        label: "say, “no. i’m cool.”",
+        response: "the child does not believe you. this does not matter. you think about it later.",
+      },
+      {
+        label: "say, “we are all decaying at the same rate.”",
+        response: "this is not strictly true. it feels true enough. the child leaves.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "THE SKETCH IS UNFINISHED.",
-    body: "You no longer remember what it was meant to become.",
+    title: "you find an unfinished sketch.",
+    body: "you remember caring about it. you do not remember why you stopped. you begin looking for a moral explanation.",
     choices: [
-      { label: "Close the notebook.", response: "THE PAGE REMAINS UNFINISHED." },
-      { label: "Leave it open.", response: "NOTHING COMPLETES ITSELF." },
+      {
+        label: "close the notebook.",
+        response: "you did not finish it. perhaps you were lazy. perhaps you were tired. perhaps tired is what lazy people call themselves when they want mercy.",
+      },
+      {
+        label: "leave it open.",
+        response: "it remains unfinished. it also remains. you are not sure which fact matters more.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "THE SUN IS SETTING.",
-    body: "You are late leaving work.",
+    title: "you leave work while the sun is setting.",
+    body: "you could stop. you have things to do. one can always do more.",
     choices: [
-      { label: "Keep walking.", response: "YOU MISS IT." },
-      { label: "Stop.", response: "YOU WATCH. IT ENDS ANYWAY." },
+      {
+        label: "keep walking.",
+        response: "you miss it. there will be another sunset. this is how most losses become acceptable.",
+      },
+      {
+        label: "stop and watch.",
+        response: "you notice it. it ends anyway. noticing was not useless. it was also not enough to save it.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "A STRANGER IS CRYING ON THE TRAIN.",
-    body: "You do not know why.",
+    title: "a stranger is crying on the train.",
+    body: "you do not know them. you are relieved by this. you are ashamed of the relief.",
     choices: [
-      { label: "Look at them.", response: "THEY SEE YOU SEE THEM." },
-      { label: "Leave a napkin beside them.", response: "YOU LEAVE BEFORE IT MEANS MORE." },
+      {
+        label: "look at them.",
+        response: "they see that you saw. you do nothing else. perhaps that was kind. perhaps kindness is what we call the smallest available action.",
+      },
+      {
+        label: "leave a napkin beside them.",
+        response: "you leave before they can thank you. you prefer kindness without witnesses. you prefer many things without witnesses.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "YOU FIND AN OLD PHOTO OF YOURSELF.",
-    body: "They do not know what happens next.",
+    title: "you find an old photograph of yourself.",
+    body: "they look hopeful. you know what happens to them. they do not.",
     choices: [
-      { label: "Apologize.", response: "THE PHOTO CANNOT ABSOLVE YOU." },
-      { label: "Say, “I survived.”", response: "THE PHOTO CANNOT ANSWER." },
+      {
+        label: "say, “i’m sorry.”",
+        response: "you begin listing the ways you failed them. there are enough. there are always enough.",
+      },
+      {
+        label: "say, “i’m still here.”",
+        response: "this sounds like a defense. it may also be an achievement. you do not know how much credit survival deserves.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "SOMEONE ASKS HOW YOU ARE.",
-    body: "A response is expected.",
+    title: "someone asks how you are.",
+    body: "you could answer honestly. you could be polite. you have confused these before.",
     choices: [
-      { label: "“Fine.”", response: "THE EXCHANGE COMPLETES." },
-      { label: "“Not well.”", response: "THE SCRIPT BREAKS." },
-      { label: "Make a joke.", response: "THEY LAUGH. OR THEY DO NOT." },
+      {
+        label: "say, “i’m fine.”",
+        response: "the conversation continues. no one is harmed. you wonder whether this makes the lie harmless.",
+      },
+      {
+        label: "say, “not well.”",
+        response: "they pause. now your pain has entered the room and become partly their problem. you apologize for this without speaking.",
+      },
+      {
+        label: "make a joke.",
+        response: "they laugh. you laugh. the truth survives in a form everyone can tolerate.",
+      },
     ],
   },
   {
     part: "I / GUILT + TIME",
-    title: "IT IS THREE IN THE AFTERNOON.",
-    body: "You are still in bed.",
+    title: "it is three in the afternoon. you are still in bed.",
+    body: "you have lost most of the day. you begin calculating what a better person would have done with it.",
     choices: [
-      { label: "Stay there.", response: "ANOTHER HOUR PASSES." },
-      { label: "Get up.", response: "THE DAY DOES NOT RESTART." },
-      { label: "Say, “At least it isn’t tomorrow.”", response: "NOT YET." },
+      {
+        label: "stay there.",
+        response: "another hour passes. now there is more evidence. guilt is efficient this way.",
+      },
+      {
+        label: "get up.",
+        response: "you get up late. the day is not restored. you do one thing. then another. this is either discipline or a very small life.",
+      },
+      {
+        label: "say, “at least i didn’t miss tomorrow.”",
+        response: "you laugh. the ceiling does not. you get up anyway. perhaps this counts. you are always asking what counts.",
+      },
     ],
   },
   {
     part: "II / GRIEF",
-    title: "THEIR HANDWRITING SURVIVED THEM.",
-    body: "The note says nothing important.",
+    title: "you find their handwriting on an old note.",
+    body: "the note says nothing important. this makes it worse. they expected to write again.",
     choices: [
-      { label: "Laugh at how messy it is.", response: "FOR A SECOND, THEY ARE ORDINARY AGAIN." },
-      { label: "Trace the letters.", response: "THE INK HOLDS. THEY DO NOT." },
+      {
+        label: "laugh at how messy it is.",
+        response: "for a second, they are not dead. they are only bad at handwriting. then they are dead again.",
+      },
+      {
+        label: "trace the letters.",
+        response: "you follow the pressure of their hand. you arrive where their hand stopped. there is nowhere else to go.",
+      },
     ],
   },
   {
     part: "II / GRIEF",
-    title: "THEIR SONG STARTS PLAYING.",
-    body: "You did not choose it.",
+    title: "a song they loved begins to play.",
+    body: "you did not choose it. this feels meaningful because you need things to feel meaningful.",
     choices: [
-      { label: "Let it play.", response: "THE SONG ENDS." },
-      { label: "Speak to the room.", response: "NO ONE ANSWERS." },
+      {
+        label: "let it play.",
+        response: "you listen for them inside it. you find yourself instead. this is not what you wanted.",
+      },
+      {
+        label: "speak to the empty room.",
+        response: "you say their name. no one answers. you knew no one would. you said it anyway.",
+      },
     ],
   },
   {
     part: "II / GRIEF",
-    title: "YOU DREAM THEY ARE ALIVE.",
-    body: "Then you wake up.",
+    title: "you dream they are alive.",
+    body: "in the dream, nothing is repaired because nothing happened. then you wake up and everything has happened again.",
     choices: [
-      { label: "Try to go back.", response: "YOU CANNOT RETURN ON COMMAND." },
-      { label: "Say, “Thank you.”", response: "THE ROOM STAYS EMPTY." },
+      {
+        label: "try to fall back asleep.",
+        response: "you cannot return on command. memory is not a place. sleep is not mercy. you keep trying.",
+      },
+      {
+        label: "say, “thank you for visiting.”",
+        response: "you do not know who you are thanking. perhaps no one. gratitude does not require a recipient to occur.",
+      },
     ],
   },
   {
     part: "II / GRIEF",
-    title: "THEIR THINGS ARE STILL HERE.",
-    body: "A jacket. A book. A scarf.",
+    title: "their things are still here.",
+    body: "a jacket. a book. a scarf. ordinary objects made difficult by ownership.",
     choices: [
-      { label: "Keep something.", response: "YOU TAKE THE OBJECT. NOT THE PERSON." },
-      { label: "Promise to care for it.", response: "THE OBJECT ACCEPTS NO PROMISES." },
+      {
+        label: "keep something small.",
+        response: "you take the object. you tell yourself it is not stealing. the dead cannot grant permission. the dead cannot object.",
+      },
+      {
+        label: "promise to care for it.",
+        response: "you make a promise to an object because objects are easier to keep than people. this is not your fault. you feel guilty anyway.",
+      },
     ],
   },
   {
     part: "II / GRIEF",
-    title: "SOMEONE SAYS THEY WOULD NOT WANT YOU SAD.",
+    title: "someone says they would not want you to be sad.",
+    body: "they are trying to help. you resent them for failing. you resent yourself for the resentment.",
     choices: [
-      { label: "Be sad.", response: "THE DEAD DO NOT SET TERMS." },
+      {
+        label: "feel sad anyway.",
+        response: "you do. grief continues without permission. so does the day. neither asks what they would have wanted.",
+      },
     ],
   },
   {
     part: "II / GRIEF",
-    title: "YOU LAUGH. THEN REMEMBER.",
-    body: "They would have liked this.",
+    title: "you are laughing. then you remember them.",
+    body: "they would have loved this. you think this every time joy arrives without them.",
     choices: [
-      { label: "Keep laughing.", response: "THE MOMENT HOLDS BOTH." },
-      { label: "Say what they would have said.", response: "YOUR VOICE HAS TO DO." },
+      {
+        label: "keep laughing.",
+        response: "you laugh for yourself. then for them. then you feel guilty for turning your life into a memorial. you keep laughing.",
+      },
+      {
+        label: "say what they would have said.",
+        response: "you hear them in your own voice. this comforts you. this frightens you. you say it again.",
+      },
     ],
   },
 ];
@@ -156,7 +251,7 @@ function TypeText({ text, as: Tag = "h2", className = "" }: { text: string; as?:
       position += 1;
       setShown(text.slice(0, position));
       if (position >= text.length) window.clearInterval(timer);
-    }, 38);
+    }, 34);
     return () => window.clearInterval(timer);
   }, [text]);
 
@@ -170,63 +265,62 @@ export default function Home() {
   const [path, setPath] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
   const audioRef = useRef<AudioContext | null>(null);
-  const musicRef = useRef<{ gains: GainNode[]; timer: number } | null>(null);
+  const musicRef = useRef<{ master: GainNode; timer: number } | null>(null);
   const finished = index >= scenes.length;
   const scene = scenes[index];
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
 
   function startMusic() {
     if (musicRef.current) {
-      musicRef.current.gains.forEach((gain) => gain.gain.setTargetAtTime(0.026, gain.context.currentTime, 0.25));
+      musicRef.current.master.gain.setTargetAtTime(0.55, musicRef.current.master.context.currentTime, 0.25);
       setSoundOn(true);
       return;
     }
-    const AudioCtor = window.AudioContext;
-    const audio = audioRef.current ?? new AudioCtor();
+    const audio = audioRef.current ?? new window.AudioContext();
     audioRef.current = audio;
     void audio.resume();
-    const filter = audio.createBiquadFilter();
-    filter.type = "lowpass";
-    filter.frequency.value = 920;
-    filter.Q.value = 5;
-    filter.connect(audio.destination);
-    const notes = [55, 65.41, 82.41, 98];
-    const gains: GainNode[] = [];
-    notes.forEach((frequency, i) => {
-      const oscillator = audio.createOscillator();
-      const gain = audio.createGain();
-      oscillator.type = i === 0 ? "sine" : "square";
-      oscillator.frequency.value = frequency;
-      oscillator.detune.value = i * 3 - 4;
-      gain.gain.value = i === 0 ? 0.035 : 0.012;
-      oscillator.connect(gain).connect(filter);
-      oscillator.start();
-      gains.push(gain);
-    });
+    const master = audio.createGain();
+    const tone = audio.createBiquadFilter();
+    const delay = audio.createDelay(1);
+    const echo = audio.createGain();
+    master.gain.value = 0.55;
+    tone.type = "lowpass";
+    tone.frequency.value = 3800;
+    delay.delayTime.value = 0.19;
+    echo.gain.value = 0.16;
+    master.connect(tone).connect(audio.destination);
+    tone.connect(delay).connect(echo).connect(audio.destination);
+
+    const melody = [72, 76, 79, 83, 79, 76, 69, 72, 76, 81, 79, 76, 67, 71, 74, 79];
     let step = 0;
-    const sequence = [0, 3, 1, 4, 2, 1, 5, 3];
-    const timer = window.setInterval(() => {
+    const playBell = () => {
       const now = audio.currentTime;
-      const pulse = audio.createOscillator();
-      const pulseGain = audio.createGain();
-      pulse.type = "square";
-      pulse.frequency.value = 110 * Math.pow(2, sequence[step % sequence.length] / 12);
-      pulseGain.gain.setValueAtTime(0.0001, now);
-      pulseGain.gain.exponentialRampToValueAtTime(0.018, now + 0.02);
-      pulseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
-      pulse.connect(pulseGain).connect(filter);
-      pulse.start(now);
-      pulse.stop(now + 0.55);
+      const midi = melody[step % melody.length];
+      const frequency = 440 * Math.pow(2, (midi - 69) / 12);
+      [1, 2.01, 3.98].forEach((multiple, i) => {
+        const oscillator = audio.createOscillator();
+        const gain = audio.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.value = frequency * multiple;
+        oscillator.detune.value = i * 2;
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(i === 0 ? 0.055 : 0.018 / i, now + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.4 - i * 0.22);
+        oscillator.connect(gain).connect(master);
+        oscillator.start(now);
+        oscillator.stop(now + 1.5);
+      });
       step += 1;
-    }, 860);
-    musicRef.current = { gains, timer };
+    };
+    playBell();
+    const timer = window.setInterval(playBell, 520);
+    musicRef.current = { master, timer };
     setSoundOn(true);
   }
 
   function toggleMusic() {
     if (!musicRef.current) return startMusic();
-    const target = soundOn ? 0.0001 : 0.026;
-    musicRef.current.gains.forEach((gain) => gain.gain.setTargetAtTime(target, gain.context.currentTime, 0.18));
+    musicRef.current.master.gain.setTargetAtTime(soundOn ? 0.0001 : 0.55, musicRef.current.master.context.currentTime, 0.2);
     setSoundOn(!soundOn);
   }
 
@@ -238,7 +332,7 @@ export default function Home() {
   function choose(choiceIndex: number) {
     if (!scene || reflection) return;
     setPath((p) => [...p, choiceIndex]);
-    setReflection(scene.choices[choiceIndex].response ?? "CHOICE RECORDED. TIME CONTINUES.");
+    setReflection(scene.choices[choiceIndex].response ?? "you chose. now you will explain the choice to yourself.");
   }
 
   function advance() {
@@ -278,27 +372,27 @@ export default function Home() {
       <header>
         <button className="wordmark" onClick={restart}>TIME PASSES ANYWAY</button>
         <div className="status">
-          <button className="sound" onClick={toggleMusic} aria-label={soundOn ? "Mute music" : "Play music"}>{soundOn ? "SOUND: ON" : "SOUND: OFF"}</button>
+          <button className="sound" onClick={toggleMusic} aria-label={soundOn ? "Mute music" : "Play music"}>{soundOn ? "MUSIC: ON" : "MUSIC: OFF"}</button>
           {started && !finished && <span>{String(index + 1).padStart(2, "0")} / {scenes.length}</span>}
         </div>
       </header>
 
       {!started ? (
         <section className="intro">
-          <p className="eyebrow">A SHORT GAME ABOUT TIME, GUILT + LOSS</p>
-          <TypeText as="h1" text={"THE CLOCK\nDOES NOT\nNEED YOU."} />
-          <p className="lede">Choose. Read the result. Continue.</p>
+          <p className="eyebrow">A GAME ABOUT GUILT, TIME + GRIEF</p>
+          <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
+          <p className="lede">there is no correct path. you will still look for one.</p>
           <button className="primary" onClick={begin}>BEGIN <span>↵</span></button>
           <p className="hint">15 SCENES · 5–7 MINUTES</p>
         </section>
       ) : finished ? (
         <section className="ending">
-          <p className="eyebrow">RUN COMPLETE</p>
-          <h1>NOTHING<br />RESOLVED.</h1>
-          <p className="closing">You chose. Time passed. What is gone remains gone. You remain.</p>
+          <p className="eyebrow">YOUR PATH</p>
+          <h1>YOU CHOSE.<br />TIME PASSED.</h1>
+          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. then you accused yourself of making excuses. nothing was settled. you are still here. perhaps that is not a defense. perhaps it does not need to be.</p>
           <p className="final-message"><strong>I love you. I always will.</strong><br /><em>Take care, my friend.</em></p>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
-          <button className="primary" onClick={restart}>RESTART <span>↺</span></button>
+          <button className="primary" onClick={restart}>BEGIN AGAIN <span>↺</span></button>
         </section>
       ) : (
         <section className="scene" aria-live="polite">
@@ -318,16 +412,16 @@ export default function Home() {
             </div>
             <p className="hint">PRESS 1–{scene.choices.length}</p>
           </> : <div className="reflection">
-            <p className="eyebrow">RESULT</p>
+            <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} />
             <button className="primary" onClick={advance}>
-              {index === scenes.length - 1 ? "VIEW RUN" : "NEXT"} <span>↵</span>
+              {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
             </button>
           </div>}
         </section>
       )}
 
-      <footer><span>TIME DOES NOT REQUIRE YOUR CONSENT.</span><span>© NOW</span></footer>
+      <footer><span>ONE CAN ALWAYS DO MORE.</span><span>© NOW</span></footer>
     </main>
   );
 }

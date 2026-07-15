@@ -1,6 +1,6 @@
 # Time Passes Anyway
 
-An interactive browser meditation with typed terminal prompts, a blinking cursor, keyboard and touch controls, and procedural cold videogame ambience generated with the Web Audio API.
+An interactive browser meditation with typed terminal prompts, a blinking cursor, keyboard and touch controls, and a procedural nostalgic music-box score generated with the Web Audio API.
 
 ## Run locally
 
@@ -21,4 +21,3 @@ Open the local URL shown in the terminal.
 4. Build with `npm run build`.
 
 The music begins only after the visitor presses **Begin**, following browser autoplay rules. The **Sound: On/Off** control remains available throughout the experience.
-

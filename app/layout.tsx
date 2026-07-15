@@ -8,14 +8,14 @@ export const metadata: Metadata = {
   title: "Time Passes Anyway",
   description: "A short interactive meditation about time, guilt, and loss.",
   openGraph: {
-    title: "The Clock Does Not Need You",
-    description: "A short interactive meditation about time, guilt + loss.",
-    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "The clock does not need you." }],
+    title: "You Do Not Have to Justify Yourself",
+    description: "A cyclical interactive meditation about guilt, time + grief.",
+    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "You do not have to justify yourself." }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Clock Does Not Need You",
-    description: "A short interactive meditation about time, guilt + loss.",
+    title: "You Do Not Have to Justify Yourself",
+    description: "A cyclical interactive meditation about guilt, time + grief.",
     images: ["/og.png"],
   },
 };
