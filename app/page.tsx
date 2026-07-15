@@ -58,7 +58,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "close the notebook.",
-        response: "you did not finish it. you call it laziness. later, you call it exhaustion. the name changes when you want mercy.",
+        response: "you did not finish it. you call it laziness. later, you call it exhaustion. the name changes when you want grace.",
       },
       {
         label: "leave it open.",
@@ -186,7 +186,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "try to fall back asleep.",
-        response: "you cannot return on command. memory is not a place. sleep is not mercy. you keep trying.",
+        response: "you cannot return on command. memory is not a place. sleep is not absolution. you keep trying.",
       },
       {
         label: "say, “thank you for visiting.”",
@@ -261,7 +261,7 @@ const scenes: Scene[] = [
       },
       {
         label: "explain why they should not.",
-        response: "you ask them to reconsider their mercy. they do not. you wonder why their judgment only counts when it hurts.",
+        response: "you ask them to offer clemency. they do not. you wonder why their judgment only counts when it hurts.",
       },
     ],
   },
