@@ -312,7 +312,7 @@ const scenes: Scene[] = [
   },
 ];
 
-function TypeText({ text, as: Tag = "h2", className = "" }: { text: string; as?: "h1" | "h2" | "p"; className?: string }) {
+function TypeText({ text, as: Tag = "h2", className = "", speed = 105 }: { text: string; as?: "h1" | "h2" | "p"; className?: string; speed?: number }) {
   const [shown, setShown] = useState("");
 
   useEffect(() => {
@@ -326,9 +326,9 @@ function TypeText({ text, as: Tag = "h2", className = "" }: { text: string; as?:
       position += 1;
       setShown(text.slice(0, position));
       if (position >= text.length) window.clearInterval(timer);
-    }, 100);
+    }, speed);
     return () => window.clearInterval(timer);
-  }, [text]);
+  }, [speed, text]);
 
   return <Tag className={`typed ${className}`} aria-label={text}><span aria-hidden="true">{shown}<span className="cursor">█</span></span></Tag>;
 }
@@ -477,7 +477,7 @@ export default function Home() {
           <p className="eyebrow">A GAME ABOUT GUILT, TIME + GRIEF</p>
           <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
           <p className="byline">by carm</p>
-          <p className="lede">there is no correct path, but you can look for one.</p>
+          <p className="lede">there is no correct path, but you can look for one. you will call the looking progress.</p>
           <button className="primary" onClick={begin}>BEGIN <span>↵</span></button>
           <p className="hint">20 SCENES · 8–10 MINUTES</p>
         </section>
@@ -485,7 +485,7 @@ export default function Home() {
         <section className="ending">
           <p className="eyebrow">YOUR PATH</p>
           <h1>YOU CHOSE.<br />TIME PASSED.</h1>
-          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. then you accused yourself of making excuses. nothing was settled. that was never the same as nothing changing. you returned to the beginning and found that you were not where you started. you are still here. perhaps that is not a defense. perhaps it does not need to be.</p>
+          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. nothing was settled. time did not ask for a verdict. you returned to the beginning and found the room unchanged. you were not. you are still here. this is not a defense. it is only what happened.</p>
           <p className="final-message"><strong>I love you. I always will.</strong><br /><em>Take care, my friend.</em></p>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
           <button className="primary" onClick={restart}>BEGIN AGAIN <span>↺</span></button>
@@ -496,7 +496,7 @@ export default function Home() {
           {!reflection ? <>
             <p className="eyebrow">PART {scene.part}</p>
             <TypeText key={`question-${index}`} text={scene.title} />
-            {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} />}
+            {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={48} />}
             <div className="choices">
               {scene.choices.map((choice, i) => (
                 <button key={choice.label} onClick={() => choose(i)}>
