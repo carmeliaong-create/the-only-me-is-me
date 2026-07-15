@@ -99,7 +99,7 @@ const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
     title: "you find an old photograph of yourself.",
-    body: "they look hopeful. you know what happens to them. they do not.",
+    body: "they look hopeful. you know what happens to them.",
     choices: [
       {
         label: "say, “i’m sorry.”",
