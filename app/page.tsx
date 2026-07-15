@@ -482,8 +482,9 @@ export default function Home() {
     <main className="screen">
       <div className="noise" aria-hidden="true" />
       <header>
-        <button className="wordmark" onClick={restart}>TIME PASSES ANYWAY</button>
+        <button className="wordmark" onClick={restart}>C:\MEMORY\TIME.EXE</button>
         <div className="status">
+          <span className="connection">LINK:14.4K</span>
           <button className="sound" onClick={toggleMusic} aria-label={soundOn ? "Mute music" : "Play music"}>{soundOn ? "MUSIC: ON" : "MUSIC: OFF"}</button>
           {started && !finished && <span>{String(index + 1).padStart(2, "0")} / {scenes.length}</span>}
         </div>
@@ -491,12 +492,12 @@ export default function Home() {
 
       {!started ? (
         <section className="intro">
-          <p className="eyebrow">A GAME ABOUT GUILT, TIME + GRIEF</p>
+          <p className="eyebrow">PERSONAL SYSTEM / SESSION 01<br />A GAME ABOUT GUILT, TIME + GRIEF</p>
           <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
           <p className="byline">by carm</p>
           <p className="lede">there is no correct path, but you can look for one. you will call the looking progress.</p>
-          <button className="primary" onClick={begin}>BEGIN <span>↵</span></button>
-          <p className="hint">20 SCENES · 8–10 MINUTES</p>
+          <button className="primary" onClick={begin}>[ ENTER SYSTEM ] <span>↵</span></button>
+          <p className="hint">20 SCENES · 8–10 MINUTES · LOCAL MEMORY ENABLED</p>
         </section>
       ) : finished ? (
         <section className="ending">
@@ -511,19 +512,19 @@ export default function Home() {
         <section className="scene" aria-live="polite">
           <div className="progress"><i style={{ width: `${progress}%` }} /></div>
           {!reflection ? <>
-            <p className="eyebrow">PART {scene.part}</p>
+            <p className="eyebrow">DIR / PART_{scene.part} / RECORD_{String(index + 1).padStart(2, "0")}</p>
             <TypeText key={`question-${index}`} text={scene.title} />
             {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} />}
             <div className="choices">
               {scene.choices.map((choice, i) => (
                 <button key={choice.label} onClick={() => choose(i)}>
-                  <b>› {i + 1}</b>
+                  <b>[0{i + 1}]</b>
                   <span>{choice.label}</span>
                   <em>_</em>
                 </button>
               ))}
             </div>
-            <p className="hint">PRESS 1–{scene.choices.length}</p>
+            <p className="hint">SELECT RECORD: PRESS 1–{scene.choices.length}</p>
           </> : <div className="reflection">
             <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} />
@@ -534,7 +535,7 @@ export default function Home() {
         </section>
       )}
 
-      <footer><span>TIME PASSES ANYWAY.</span><span>© NOW</span></footer>
+      <footer><span>SYS/1997 · TIME PASSES ANYWAY.</span><span>MEM: 640K · © NOW</span></footer>
     </main>
   );
 }
