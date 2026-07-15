@@ -5,17 +5,17 @@ import "./globals.css";
 const mono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "The Clock Is Louder — An Interactive Meditation",
-  description: "A choose-your-own-adventure about guilt, time, grief, and the quiet act of noticing.",
+  title: "Time Passes Anyway",
+  description: "A short interactive meditation about time, guilt, and loss.",
   openGraph: {
-    title: "The Clock Is Louder When You’re Alone",
-    description: "An interactive meditation on time, guilt + grief.",
-    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "The clock is louder when you’re alone." }],
+    title: "The Clock Does Not Need You",
+    description: "A short interactive meditation about time, guilt + loss.",
+    images: [{ url: "/og.png", width: 1536, height: 1024, alt: "The clock does not need you." }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "The Clock Is Louder When You’re Alone",
-    description: "An interactive meditation on time, guilt + grief.",
+    title: "The Clock Does Not Need You",
+    description: "A short interactive meditation about time, guilt + loss.",
     images: ["/og.png"],
   },
 };
