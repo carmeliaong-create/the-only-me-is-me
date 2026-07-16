@@ -338,7 +338,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "continue.",
-        response: "you continue without becoming fearless. the fear comes with you. it is no longer in charge.",
+        response: "you continue. the fear comes with you.",
       },
       {
         label: "turn back.",
