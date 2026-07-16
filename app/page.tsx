@@ -561,7 +561,7 @@ export default function Home() {
 
       {!started ? (
         <section className="intro">
-          <p className="eyebrow">PERSONAL SYSTEM / SESSION 01<br />A GAME ABOUT GUILT, TIME + GRIEF</p>
+          <p className="eyebrow">PERSONAL SYSTEM / SESSION 01<br />A MEDITATION ON GUILT, TIME + GRIEF</p>
           <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
           <p className="byline">by carm</p>
           <p className="lede">there is no correct path, but you can look for one and call the looking progress.</p>
