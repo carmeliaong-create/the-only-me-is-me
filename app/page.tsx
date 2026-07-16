@@ -403,7 +403,7 @@ export default function Home() {
     const music = new Audio(`${import.meta.env.BASE_URL}audio/falling-pixels.mp3`);
     music.loop = true;
     music.preload = "auto";
-    music.volume = 0.35;
+    music.volume = 0.3;
     musicRef.current = music;
     void music.play();
     setSoundOn(true);
@@ -444,7 +444,7 @@ export default function Home() {
       const gain = context.createGain();
       oscillator.type = "square";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.24, now);
+      gain.gain.setValueAtTime(0.48, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(now);
