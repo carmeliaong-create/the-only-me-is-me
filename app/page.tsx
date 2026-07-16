@@ -456,17 +456,26 @@ export default function Home() {
     const context = contextRef.current;
     if (!context || context.state !== "running") return;
     const now = context.currentTime;
-    [[523.25, 0], [659.25, 0.11], [783.99, 0.22]].forEach(([frequency, delay]) => {
+    const master = context.createGain();
+    master.gain.value = 1;
+    master.connect(context.destination);
+    const chime: Array<[number, number, number, OscillatorType]> = [
+      [523.25, 0, 0.42, "sine"],
+      [783.99, 0.085, 0.32, "sine"],
+      [1046.5, 0.17, 0.22, "triangle"],
+    ];
+    chime.forEach(([frequency, delay, volume, type]) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       const start = now + delay;
-      oscillator.type = "sine";
+      oscillator.type = type;
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(1, start);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.095);
-      oscillator.connect(gain).connect(context.destination);
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(volume, start + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.58);
+      oscillator.connect(gain).connect(master);
       oscillator.start(start);
-      oscillator.stop(start + 0.1);
+      oscillator.stop(start + 0.6);
     });
   }
 
