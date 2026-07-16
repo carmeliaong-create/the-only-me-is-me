@@ -444,7 +444,7 @@ export default function Home() {
       const gain = context.createGain();
       oscillator.type = "square";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(1.5, now);
+      gain.gain.setValueAtTime(1, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(now);
@@ -456,13 +456,13 @@ export default function Home() {
     const context = contextRef.current;
     if (!context || context.state !== "running") return;
     const now = context.currentTime;
-    [[523.25, 0], [659.25, 0.11], [783.99, 0.22], [1046.5, 0.33]].forEach(([frequency, delay]) => {
+    [[523.25, 0], [659.25, 0.11], [783.99, 0.22]].forEach(([frequency, delay]) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       const start = now + delay;
       oscillator.type = "sine";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(1.5, start);
+      gain.gain.setValueAtTime(1, start);
       gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.095);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(start);
