@@ -339,99 +339,30 @@ export default function Home() {
   const [reflection, setReflection] = useState<string | null>(null);
   const [path, setPath] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
-  const audioRef = useRef<AudioContext | null>(null);
-  const musicRef = useRef<{ master: GainNode; timer: number } | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const finished = index >= scenes.length;
   const scene = scenes[index];
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
 
   function startMusic() {
-    if (musicRef.current) {
-      musicRef.current.master.gain.setTargetAtTime(0.55, musicRef.current.master.context.currentTime, 0.25);
+    if (audioRef.current) {
+      void audioRef.current.play();
       setSoundOn(true);
       return;
     }
-    const audio = audioRef.current ?? new window.AudioContext();
+    const audio = new Audio("/audio/fading-pixel.mp3");
+    audio.loop = true;
+    audio.volume = 0.55;
+    audio.preload = "auto";
     audioRef.current = audio;
-    void audio.resume();
-    const master = audio.createGain();
-    const tone = audio.createBiquadFilter();
-    const delay = audio.createDelay(1);
-    const echo = audio.createGain();
-    master.gain.value = 0.55;
-    tone.type = "lowpass";
-    tone.frequency.value = 3800;
-    delay.delayTime.value = 0.27;
-    echo.gain.value = 0.22;
-    master.connect(tone).connect(audio.destination);
-    tone.connect(delay).connect(echo).connect(audio.destination);
-
-    // Music-box arrangement of the opening theme transcribed from the
-    // user-provided piano score: C minor, slow 4/4, approximately 30 seconds.
-    const melody = [
-      67, 72, 75, 74, 72, 75, 72, 74,
-      72, 68, 70, 67, 67, -1, -1, -1,
-      67, 70, 73, 72, 70, 73, 70, 72,
-      70, 67, 68, 65, 65, -1, -1, -1,
-      65, 68, 72, 71, 68, 67, 68, 70,
-      67, 63, 63, -1, 67, 72, 75, 74,
-      72, 75, 72, 74, 72, 68, 70, 67,
-      67, -1, 65, 68, 72, 71, 67, -1,
-    ];
-    const bass = [48, 46, 44, 43, 41, 48, 43, 48];
-    const chords = [
-      [60, 63, 67], [58, 63, 67], [56, 60, 63], [55, 59, 62],
-      [53, 56, 60], [60, 63, 67], [55, 59, 62], [60, 63, 67],
-    ];
-    let step = 0;
-    const ring = (midi: number, volume: number, decay = 1.6) => {
-      const now = audio.currentTime;
-      const frequency = 440 * Math.pow(2, (midi - 69) / 12);
-      [1, 2.01, 3.98].forEach((multiple, i) => {
-        const oscillator = audio.createOscillator();
-        const gain = audio.createGain();
-        oscillator.type = "sine";
-        oscillator.frequency.value = frequency * multiple;
-        oscillator.detune.value = i * 2;
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(i === 0 ? volume : volume * 0.22 / Math.max(i, 1), now + 0.012);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + decay - i * 0.18);
-        oscillator.connect(gain).connect(master);
-        oscillator.start(now);
-        oscillator.stop(now + decay + 0.1);
-      });
-    };
-    const playStep = () => {
-      const position = step % melody.length;
-      const note = melody[position];
-      const bar = Math.floor(step / 8) % 8;
-      const emotionalArc = [0.72, 0.76, 0.8, 0.84, 0.92, 1, 1.08, 0.82][bar];
-      const heldAcrossLoop = position === 0 && step > 0;
-      if (note > 0 && !heldAcrossLoop) {
-        const decay = position === melody.length - 2 ? 3.4 : bar >= 6 ? 2.05 : 1.75;
-        ring(note, 0.044 * emotionalArc, decay);
-        if (bar >= 4 && step % 8 === 0) ring(note - 12, 0.011 * emotionalArc, 2.8);
-        if (bar === 5 || bar === 6) ring(note + 12, 0.007, 1.25);
-      }
-      if (step % 8 === 0) {
-        ring(bass[bar], 0.018 * emotionalArc, 2.7);
-        ring(bass[bar] + 7, 0.01 * emotionalArc, 2.3);
-        chords[bar].forEach((midi, i) => ring(midi, (0.0078 - i * 0.0012) * emotionalArc, 3.4));
-      } else if (step % 8 === 2 || step % 8 === 4 || step % 8 === 6) {
-        const chordNote = step % 8 === 2 ? 1 : step % 8 === 4 ? 2 : 0;
-        ring(chords[bar][chordNote] + 12, 0.0075 * emotionalArc, 1.75);
-      }
-      step += 1;
-    };
-    playStep();
-    const timer = window.setInterval(playStep, 468.75);
-    musicRef.current = { master, timer };
+    void audio.play();
     setSoundOn(true);
   }
 
   function toggleMusic() {
-    if (!musicRef.current) return startMusic();
-    musicRef.current.master.gain.setTargetAtTime(soundOn ? 0.0001 : 0.55, musicRef.current.master.context.currentTime, 0.2);
+    if (!audioRef.current) return startMusic();
+    if (soundOn) audioRef.current.pause();
+    else void audioRef.current.play();
     setSoundOn(!soundOn);
   }
 
@@ -473,8 +404,8 @@ export default function Home() {
   });
 
   useEffect(() => () => {
-    if (musicRef.current) window.clearInterval(musicRef.current.timer);
-    void audioRef.current?.close();
+    audioRef.current?.pause();
+    if (audioRef.current) audioRef.current.currentTime = 0;
   }, []);
 
   return (
