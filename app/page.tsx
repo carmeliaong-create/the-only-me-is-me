@@ -341,6 +341,7 @@ export default function Home() {
   const [index, setIndex] = useState(0);
   const [reflection, setReflection] = useState<string | null>(null);
   const [path, setPath] = useState<number[]>([]);
+  const [farewell, setFarewell] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
   const [systemTime, setSystemTime] = useState("00:00:00");
   const contextRef = useRef<AudioContext | null>(null);
@@ -479,11 +480,18 @@ export default function Home() {
     setIndex(0);
     setPath([]);
     setReflection(null);
+    setFarewell(false);
   }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!started && (e.key === "Enter" || e.key === " ")) {
+      if (farewell && (e.key === "Enter" || e.key === " ")) {
+        playKeypadBeep();
+        restart();
+      } else if (finished && (e.key === "Enter" || e.key === " ")) {
+        playKeypadBeep();
+        setFarewell(true);
+      } else if (!started && (e.key === "Enter" || e.key === " ")) {
         begin();
         window.setTimeout(playKeypadBeep, 0);
       } else if (reflection && (e.key === "Enter" || e.key === " ")) {
@@ -560,14 +568,21 @@ export default function Home() {
           <button className="primary" onClick={begin}>[ ENTER SYSTEM ] <span>↵</span></button>
           <p className="hint">20 SCENES · 8–10 MINUTES · LOCAL MEMORY ENABLED</p>
         </section>
+      ) : farewell ? (
+        <section className="farewell">
+          <p className="eyebrow">SESSION COMPLETE / CONNECTION CLOSING</p>
+          <TypeText as="h1" text={"TAKE CARE,\nMY FRIEND."} speed={112} />
+          <p className="signoff-code">END OF TRANSMISSION · {systemTime}</p>
+          <button className="primary" onClick={restart}>[ RESTART ] <span>↺</span></button>
+        </section>
       ) : finished ? (
         <section className="ending">
-          <p className="eyebrow">YOUR PATH</p>
+          <p className="eyebrow">YOUR PATH / SESSION RECORD</p>
           <h1>YOU CHOSE.<br />TIME PASSED.</h1>
-          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. nothing was settled. time did not ask for a verdict. you returned to the beginning and found the room unchanged. you were not. you are still here. this is not a defense. it is only what happened.</p>
-          <p className="final-message"><strong>I love you. I always will.</strong><br /><em>Take care, my friend.</em></p>
+          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. nothing was settled. time did not ask for a verdict. you returned to the beginning and found the room unchanged. you were not. you are still here. i love you. i always will.</p>
+          <div className="route-summary"><span>20 RECORDS READ</span><span>NO CORRECT PATH FOUND</span><span>SESSION SAVED: NOW</span></div>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
-          <button className="primary" onClick={restart}>BEGIN AGAIN <span>↺</span></button>
+          <button className="primary" onClick={() => setFarewell(true)}>CLOSE SESSION <span>↵</span></button>
         </section>
       ) : (
         <section className="scene" aria-live="polite">
