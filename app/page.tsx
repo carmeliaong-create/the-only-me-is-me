@@ -443,17 +443,12 @@ export default function Home() {
   const [previousPath, setPreviousPath] = useState<number[] | null>(null);
   const [routeChanges, setRouteChanges] = useState<number | null>(null);
   const [pendingChoice, setPendingChoice] = useState<number | null>(null);
-  const [introComplete, setIntroComplete] = useState(false);
   const [titleComplete, setTitleComplete] = useState(false);
-  const [bodyComplete, setBodyComplete] = useState(false);
-  const [reflectionComplete, setReflectionComplete] = useState(false);
-  const [farewellComplete, setFarewellComplete] = useState(false);
   const contextRef = useRef<AudioContext | null>(null);
   const musicRef = useRef<HTMLAudioElement | null>(null);
   const completionRecordedRef = useRef(false);
   const finished = index >= scenes.length;
   const scene = scenes[index];
-  const sceneComplete = titleComplete && (!scene?.body || bodyComplete);
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
 
   useEffect(() => {
@@ -530,7 +525,6 @@ export default function Home() {
   }
 
   function begin() {
-    if (!introComplete) return;
     startMusic();
     setStarted(true);
   }
@@ -580,24 +574,20 @@ export default function Home() {
   }
 
   function choose(choiceIndex: number) {
-    if (!scene || reflection || !sceneComplete) return;
+    if (!scene || reflection) return;
     if (scene.intentional && pendingChoice !== choiceIndex) {
       setPendingChoice(choiceIndex);
       return;
     }
     setPendingChoice(null);
-    setReflectionComplete(false);
     setPath((p) => [...p, choiceIndex]);
     setReflection(scene.choices[choiceIndex].response ?? "you chose. now you will explain the choice to yourself.");
   }
 
   function advance() {
-    if (!reflectionComplete) return;
     setPendingChoice(null);
     setReflection(null);
     setTitleComplete(false);
-    setBodyComplete(false);
-    setReflectionComplete(false);
     setIndex((i) => i + 1);
   }
 
@@ -614,29 +604,25 @@ export default function Home() {
     setReflection(null);
     setFarewell(false);
     setPendingChoice(null);
-    setIntroComplete(false);
     setTitleComplete(false);
-    setBodyComplete(false);
-    setReflectionComplete(false);
-    setFarewellComplete(false);
   }
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (farewell && farewellComplete && (e.key === "Enter" || e.key === " ")) {
+      if (farewell && (e.key === "Enter" || e.key === " ")) {
         playKeypadBeep();
         restart();
       } else if (finished && (e.key === "Enter" || e.key === " ")) {
         playKeypadBeep();
         setFarewell(true);
-      } else if (!started && introComplete && (e.key === "Enter" || e.key === " ")) {
+      } else if (!started && (e.key === "Enter" || e.key === " ")) {
         begin();
         window.setTimeout(playKeypadBeep, 0);
-      } else if (reflection && reflectionComplete && (e.key === "Enter" || e.key === " ")) {
+      } else if (reflection && (e.key === "Enter" || e.key === " ")) {
         playContinueBeep();
         advance();
       }
-      else if (started && !finished && !reflection && sceneComplete && /^[1-3]$/.test(e.key)) {
+      else if (started && !finished && !reflection && /^[1-3]$/.test(e.key)) {
         const n = Number(e.key) - 1;
         if (n < scene.choices.length) {
           playKeypadBeep();
@@ -703,18 +689,18 @@ export default function Home() {
       {!started ? (
         <section className="intro">
           <p className="eyebrow">PERSONAL SYSTEM / SESSION {String(sessionNumber).padStart(2, "0")}<br />A MEDITATION ON GUILT, TIME + GRIEF</p>
-          <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} onComplete={() => setIntroComplete(true)} />
+          <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
           <p className="byline">by carm</p>
           <p className="lede">there is no correct path, but you can look for one and call the looking progress.</p>
-          {introComplete && <button className="primary" onClick={begin}>[ ENTER SYSTEM ] <span>↵</span></button>}
+          <button className="primary" onClick={begin}>[ ENTER SYSTEM ] <span>↵</span></button>
           <p className="hint">{scenes.length} SCENES · 10–12 MINUTES · LOCAL MEMORY ENABLED</p>
         </section>
       ) : farewell ? (
         <section className="farewell">
           <p className="eyebrow">SESSION {String(sessionNumber).padStart(2, "0")} COMPLETE / CONNECTION CLOSING</p>
-          <TypeText as="p" className="farewell-message" text="take care, my friend." speed={76} onComplete={() => setFarewellComplete(true)} />
+          <TypeText as="p" className="farewell-message" text="take care, my friend." speed={76} />
           <p className="signoff-code">END OF TRANSMISSION · {systemTime}</p>
-          {farewellComplete && <button className="primary" onClick={restart}>[ RESTART ] <span>↺</span></button>}
+          <button className="primary" onClick={restart}>[ RESTART ] <span>↺</span></button>
         </section>
       ) : finished ? (
         <section className="ending">
@@ -731,26 +717,26 @@ export default function Home() {
           {!reflection ? <>
             <p className="eyebrow">DIR / PART_{scene.part} / RECORD_{String(index + 1).padStart(2, "0")}</p>
             <TypeText key={`question-${index}`} text={scene.title} onComplete={() => setTitleComplete(true)} />
-            {scene.body && titleComplete && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} onComplete={() => setBodyComplete(true)} />}
-            <><div className={`choices${sceneComplete ? "" : " loading"}`}>
+            {scene.body && titleComplete && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} />}
+            <><div className="choices">
               {scene.choices.map((choice, i) => (
-                <button key={choice.label} className={pendingChoice === i ? "pending" : ""} data-sound="selection" disabled={!sceneComplete} onClick={() => { playKeypadBeep(); choose(i); }}>
+                <button key={choice.label} className={pendingChoice === i ? "pending" : ""} data-sound="selection" onClick={() => { playKeypadBeep(); choose(i); }}>
                   <b>[0{i + 1}]</b>
                   <span>{pendingChoice === i ? `confirm: ${choice.label}` : choice.label}</span>
                   <em>_</em>
                 </button>
               ))}
             </div>
-            <p className="hint">{!sceneComplete ? "RECORD LOADING..." : scene.intentional ? pendingChoice === null ? "SELECT RECORD. PRESS AGAIN TO CONFIRM." : "CONFIRM OR CHOOSE AGAIN." : `SELECT RECORD: PRESS 1–${scene.choices.length}`}</p>
+            <p className="hint">{scene.intentional ? pendingChoice === null ? "SELECT RECORD. PRESS AGAIN TO CONFIRM." : "CONFIRM OR CHOOSE AGAIN." : `SELECT RECORD: PRESS 1–${scene.choices.length}`}</p>
             </>
           </> : <div className="reflection">
             <p className="eyebrow">YOU CHOSE</p>
-            <TypeText key={`result-${index}`} text={reflection} onComplete={() => setReflectionComplete(true)} />
-            {reflectionComplete && <div className="reflection-actions">
+            <TypeText key={`result-${index}`} text={reflection} />
+            <div className="reflection-actions">
               <button className="primary" data-sound="continue" onClick={() => { playContinueBeep(); advance(); }}>
                 {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
               </button>
-            </div>}
+            </div>
           </div>}
         </section>
       )}
