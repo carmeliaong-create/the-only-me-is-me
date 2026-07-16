@@ -363,14 +363,17 @@ export default function Home() {
     filter.frequency.value = 1850;
     filter.Q.value = 0.62;
     master.connect(filter).connect(context.destination);
-    const melody = [
-      67,72,75,74,72,75,72,74, 72,68,70,67,67,-1,-1,-1,
-      67,70,73,72,70,73,70,72, 70,67,68,65,65,-1,-1,-1,
-      65,68,72,71,68,67,68,70, 67,63,63,-1,67,72,75,74,
-      72,75,72,74,72,68,70,67, 67,-1,65,68,72,71,67,-1,
+    // Dominant lead contour extracted from the user-provided Fading Pixel MP3,
+    // reduced to monophonic note/duration pairs for an old-cellphone voice.
+    const melody: Array<[number, number]> = [
+      [72,4],[75,3],[79,8],[60,4],[63,3],[67,4],[75,4],[77,3],
+      [75,4],[74,9],[62,5],[67,7],[70,7],[63,1],[72,7],[63,2],
+      [72,2],[75,4],[74,7],[72,7],[67,12],[67,2],[63,8],[67,4],
+      [70,3],[68,15],[60,7],[72,5],[75,3],[67,11],[77,4],[74,6],
+      [62,2],[74,1],[62,2],[72,3],[74,1],[75,4],[77,7],[60,1],
+      [75,3],[68,6],[67,1],[70,7],[72,8],
     ];
-    const bass = [48,46,44,43,41,48,43,48];
-    const pulse = (midi: number, volume: number, decay: number, type: OscillatorType = "triangle") => {
+    const pulse = (midi: number, volume: number, decay: number, type: OscillatorType = "square") => {
       const now = context.currentTime;
       const oscillator = context.createOscillator();
       const gain = context.createGain();
@@ -383,19 +386,20 @@ export default function Home() {
       oscillator.start(now);
       oscillator.stop(now + decay + 0.05);
     };
-    let step = 0;
+    let eventIndex = 0;
+    let remaining = 0;
     const playStep = () => {
-      const position = step % melody.length;
-      const note = melody[position];
-      if (note > 0 && !(position === 0 && step > 0)) {
-        pulse(note + 12, 0.038, position === melody.length - 2 ? 3.4 : 1.3);
+      if (remaining <= 0) {
+        const [note, duration] = melody[eventIndex];
+        pulse(note, 0.026, Math.max(0.1, duration * 0.118));
+        remaining = duration;
+        eventIndex = (eventIndex + 1) % melody.length;
       }
-      if (step % 8 === 0) pulse(bass[Math.floor(step / 8) % bass.length], 0.009, 1.5, "sine");
-      step += 1;
+      remaining -= 1;
     };
     void context.resume();
     playStep();
-    const timer = window.setInterval(playStep, 468.75);
+    const timer = window.setInterval(playStep, 125);
     musicRef.current = { master, timer };
     setSoundOn(true);
   }
@@ -412,8 +416,26 @@ export default function Home() {
     setStarted(true);
   }
 
+  function playSelectionBeep() {
+    const context = contextRef.current;
+    if (!soundOn || !context || context.state !== "running") return;
+    const now = context.currentTime;
+    [697, 1209].forEach((frequency) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "square";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.006, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.08);
+    });
+  }
+
   function choose(choiceIndex: number) {
     if (!scene || reflection) return;
+    playSelectionBeep();
     setPath((p) => [...p, choiceIndex]);
     setReflection(scene.choices[choiceIndex].response ?? "you chose. now you will explain the choice to yourself.");
   }
