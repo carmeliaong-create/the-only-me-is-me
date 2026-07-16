@@ -43,7 +43,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "say, “no. i’m cool.”",
-        response: "the child does not believe you. this does not matter. you think about it later.",
+        response: "the child does not believe you. you think about it later.",
       },
       {
         label: "say, “we are all decaying at the same rate.”",
@@ -69,7 +69,7 @@ const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
     title: "you leave work while the sun is setting.",
-    body: "you could stop. you have things to do. the screen will wait.",
+    body: "you could stop and look. you have things to do. the screen will wait.",
     choices: [
       {
         label: "keep walking.",
@@ -88,7 +88,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "look at them.",
-        response: "they see that you saw. you do nothing else. it may have been kind. kindness is sometimes the smallest available action.",
+        response: "they see that you saw. it may have been kind. kindness is sometimes the smallest available action.",
       },
       {
         label: "leave a napkin beside them.",
@@ -103,7 +103,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "say, “i’m sorry.”",
-        response: "you begin listing the ways you failed them. there are enough. there are always enough.",
+        response: "you begin listing the ways you failed them. the list does not end.",
       },
       {
         label: "say, “i’m still here.”",
@@ -145,7 +145,7 @@ const scenes: Scene[] = [
       },
       {
         label: "say, “at least i didn’t miss tomorrow.”",
-        response: "you laugh. the ceiling does not. you get up anyway. you decide this counts. you are always asking what counts.",
+        response: "you laugh. the ceiling does not. you get up anyway. you decide this counts. you keep deciding what qualifies.",
       },
     ],
   },
@@ -175,7 +175,7 @@ const scenes: Scene[] = [
       },
       {
         label: "speak to the empty room.",
-        response: "you say their name. no one answers. you knew no one would. you said it anyway.",
+        response: "you say their name. no one answers. you knew no one would, but you said it anyway.",
       },
     ],
   },
@@ -186,7 +186,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "try to fall back asleep.",
-        response: "you cannot return on command. memory is not a place. sleep is not absolution. you keep trying.",
+        response: "you cannot return on command. memory is not a place. sleep is not absolution. you can keep trying.",
       },
       {
         label: "say, “thank you for visiting.”",
@@ -216,7 +216,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "feel sad anyway.",
-        response: "you do. grief continues without permission. so does the day. neither asks what they would have wanted.",
+        response: "you do. grief moves through you without permission. it does not matter what you wanted.",
       },
     ],
   },
@@ -257,7 +257,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "believe them.",
-        response: "you try. belief takes its time. you have practiced the opposite for longer.",
+        response: "you try. you have practiced the opposite for longer.",
       },
       {
         label: "explain why they should not.",
@@ -268,7 +268,7 @@ const scenes: Scene[] = [
   {
     part: "III / RETURN",
     title: "you notice that you have become someone your younger self needed.",
-    body: "not entirely. not consistently. enough to recognize the shape.",
+    body: "not entirely or consistently. only enough to recognize the outline.",
     choices: [
       {
         label: "allow yourself to be proud.",
@@ -302,7 +302,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "say nothing for a moment. then speak.",
-        response: "the silence was not failure. the speaking is not rescue. both belong to you. you tell them anyway.",
+        response: "the silence was not failure. the speaking is not rescue. both belong to you.",
       },
       {
         label: "take their hand.",
