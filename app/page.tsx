@@ -571,7 +571,7 @@ export default function Home() {
       ) : farewell ? (
         <section className="farewell">
           <p className="eyebrow">SESSION COMPLETE / CONNECTION CLOSING</p>
-          <TypeText as="h1" text={"TAKE CARE,\nMY FRIEND."} speed={112} />
+          <TypeText as="h1" text={"take care,\nmy friend."} speed={112} />
           <p className="signoff-code">END OF TRANSMISSION · {systemTime}</p>
           <button className="primary" onClick={restart}>[ RESTART ] <span>↺</span></button>
         </section>
@@ -580,7 +580,6 @@ export default function Home() {
           <p className="eyebrow">YOUR PATH / SESSION RECORD</p>
           <h1>YOU CHOSE.<br />TIME PASSED.</h1>
           <p className="closing">you act, you explain, you accuse yourself, then defend yourself. nothing is settled. you return to the beginning and find the room unchanged, but you are not. you are still here.</p>
-          <p className="love-message">i love you. i always will.</p>
           <div className="route-summary"><span>20 RECORDS READ</span><span>NO CORRECT PATH FOUND</span><span>SESSION SAVED: NOW</span></div>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
           <button className="primary" onClick={() => setFarewell(true)}>CLOSE SESSION <span>↵</span></button>
