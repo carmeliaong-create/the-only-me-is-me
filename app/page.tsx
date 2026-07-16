@@ -8,7 +8,7 @@ type Scene = { part: string; title: string; body?: string; choices: Choice[] };
 const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
-    title: "you are sitting beside someone you love. the clock is loud.",
+    title: "you sit beside someone you love. neither of you speaks. the clock fills the silence.",
     body: "you could tell them what they mean to you. you could also wait. waiting feels harmless while you are doing it.",
     choices: [
       {
@@ -99,7 +99,7 @@ const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
     title: "you find an old photograph of yourself.",
-    body: "a date is printed along the bottom. they look hopeful. you know what happens to them.",
+    body: "a date is printed along the bottom. they look hopeful. you know what happens.",
     choices: [
       {
         label: "say, “i’m sorry.”",
@@ -201,7 +201,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "keep something small.",
-        response: "you take the object. you tell yourself it is not stealing. the dead cannot grant permission. the dead cannot object.",
+        response: "you take the object. you tell yourself it is not stealing. the dead cannot grant permission. the dead also cannot object.",
       },
       {
         label: "promise to care for it.",
@@ -297,7 +297,7 @@ const scenes: Scene[] = [
   },
   {
     part: "III / RETURN",
-    title: "you are sitting beside someone you love. the clock is loud.",
+    title: "you sit beside someone you love. neither of you speaks. the clock fills the silence.",
     body: "you have been here before. not here exactly. time does not circle, but you do. returning shows you what changed.",
     choices: [
       {
