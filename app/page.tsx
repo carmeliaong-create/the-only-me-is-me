@@ -444,7 +444,7 @@ export default function Home() {
       const gain = context.createGain();
       oscillator.type = "square";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.setValueAtTime(1.5, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(now);
@@ -456,17 +456,17 @@ export default function Home() {
     const context = contextRef.current;
     if (!context || context.state !== "running") return;
     const now = context.currentTime;
-    [[659.25, 0], [783.99, 0.09], [987.77, 0.18]].forEach(([frequency, delay]) => {
+    [[523.25, 0], [659.25, 0.11], [783.99, 0.22], [1046.5, 0.33]].forEach(([frequency, delay]) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       const start = now + delay;
-      oscillator.type = "triangle";
+      oscillator.type = "sine";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.2, start);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.075);
+      gain.gain.setValueAtTime(1.5, start);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.095);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(start);
-      oscillator.stop(start + 0.08);
+      oscillator.stop(start + 0.1);
     });
   }
 
@@ -528,8 +528,7 @@ export default function Home() {
       if (!(target instanceof Element)) return;
       const button = target.closest("button");
       if (!button) return;
-      if (button.dataset.sound === "continue") playContinueBeep();
-      else playKeypadBeep();
+      if (!button.dataset.sound) playKeypadBeep();
     };
     window.addEventListener("click", onButtonClick);
     return () => window.removeEventListener("click", onButtonClick);
@@ -608,7 +607,7 @@ export default function Home() {
             {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} />}
             <div className="choices">
               {scene.choices.map((choice, i) => (
-                <button key={choice.label} onClick={() => choose(i)}>
+                <button key={choice.label} data-sound="selection" onClick={() => { playKeypadBeep(); choose(i); }}>
                   <b>[0{i + 1}]</b>
                   <span>{choice.label}</span>
                   <em>_</em>
@@ -619,7 +618,7 @@ export default function Home() {
           </> : <div className="reflection">
             <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} />
-            <button className="primary" data-sound="continue" onClick={advance}>
+            <button className="primary" data-sound="continue" onClick={() => { playContinueBeep(); advance(); }}>
               {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
             </button>
           </div>}
