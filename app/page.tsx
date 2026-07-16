@@ -349,6 +349,10 @@ export default function Home() {
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
 
   function startMusic() {
+    if (contextRef.current?.state === "closed") {
+      contextRef.current = null;
+      musicRef.current = null;
+    }
     if (musicRef.current) {
       const now = musicRef.current.master.context.currentTime;
       musicRef.current.master.gain.setTargetAtTime(0.16, now, 0.18);
@@ -405,6 +409,19 @@ export default function Home() {
     musicRef.current = { master, timer };
     setSoundOn(true);
   }
+
+  useEffect(() => {
+    startMusic();
+    const resumeAutoplay = () => {
+      if (contextRef.current?.state === "suspended") void contextRef.current.resume();
+    };
+    window.addEventListener("pointerdown", resumeAutoplay, { once: true });
+    window.addEventListener("keydown", resumeAutoplay, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", resumeAutoplay);
+      window.removeEventListener("keydown", resumeAutoplay);
+    };
+  }, []);
 
   function toggleMusic() {
     if (!musicRef.current) return startMusic();
