@@ -52,6 +52,7 @@ h2 { max-width:800px; font-size:clamp(28px,4.4vw,52px); font-weight:400; letter-
 .pathline { display:flex; justify-content:center; gap:7px; margin:0 auto 36px; }
 .pathline i { width:18px; height:4px; background:#e8e8e3; box-shadow:none; }
 .pathline i.dim { background:#555; box-shadow:none; }
+.pathline i.changed { height:8px; margin-top:-2px; background:var(--cold); box-shadow:0 0 8px rgba(185,196,185,.48); }
 .farewell { text-align:center; width:min(720px,100%); min-height:420px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
 .farewell .eyebrow { align-self:stretch; }
 .farewell-message { margin:auto 0; color:var(--ink); font-size:10px; line-height:1.8; letter-spacing:.08em; text-transform:lowercase; }

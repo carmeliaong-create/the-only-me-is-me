@@ -5,6 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 type Choice = { label: string; response?: string };
 type Scene = { part: string; title: string; body?: string; choices: Choice[] };
 
+const SESSION_COUNT_KEY = "time-passes-anyway-session-count";
+const LAST_ROUTE_KEY = "time-passes-anyway-last-route";
+
 const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
@@ -344,11 +347,40 @@ export default function Home() {
   const [farewell, setFarewell] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
   const [systemTime, setSystemTime] = useState("00:00:00");
+  const [sessionNumber, setSessionNumber] = useState(1);
+  const [previousPath, setPreviousPath] = useState<number[] | null>(null);
+  const [routeChanges, setRouteChanges] = useState<number | null>(null);
   const contextRef = useRef<AudioContext | null>(null);
   const musicRef = useRef<HTMLAudioElement | null>(null);
+  const completionRecordedRef = useRef(false);
   const finished = index >= scenes.length;
   const scene = scenes[index];
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
+
+  useEffect(() => {
+    const completedSessions = Number.parseInt(window.localStorage.getItem(SESSION_COUNT_KEY) ?? "0", 10);
+    setSessionNumber((Number.isFinite(completedSessions) ? completedSessions : 0) + 1);
+    const savedRoute = window.localStorage.getItem(LAST_ROUTE_KEY);
+    if (savedRoute) {
+      try {
+        const parsedRoute = JSON.parse(savedRoute);
+        if (Array.isArray(parsedRoute) && parsedRoute.every((choice) => Number.isInteger(choice))) setPreviousPath(parsedRoute);
+      } catch {
+        window.localStorage.removeItem(LAST_ROUTE_KEY);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!finished || completionRecordedRef.current || path.length !== scenes.length) return;
+    completionRecordedRef.current = true;
+    const changes = previousPath
+      ? path.reduce((total, choice, position) => total + (choice === previousPath[position] ? 0 : 1), 0)
+      : null;
+    setRouteChanges(changes);
+    window.localStorage.setItem(SESSION_COUNT_KEY, String(sessionNumber));
+    window.localStorage.setItem(LAST_ROUTE_KEY, JSON.stringify(path));
+  }, [finished, path, previousPath, sessionNumber]);
 
   useEffect(() => {
     const updateClock = () => {
@@ -432,6 +464,11 @@ export default function Home() {
   }
 
   function restart() {
+    if (finished && path.length === scenes.length) {
+      setPreviousPath(path);
+      setSessionNumber((number) => number + 1);
+    }
+    completionRecordedRef.current = false;
     setStarted(false);
     setIndex(0);
     setPath([]);
@@ -517,7 +554,7 @@ export default function Home() {
 
       {!started ? (
         <section className="intro">
-          <p className="eyebrow">PERSONAL SYSTEM / SESSION 01<br />A MEDITATION ON GUILT, TIME + GRIEF</p>
+          <p className="eyebrow">PERSONAL SYSTEM / SESSION {String(sessionNumber).padStart(2, "0")}<br />A MEDITATION ON GUILT, TIME + GRIEF</p>
           <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
           <p className="byline">by carm</p>
           <p className="lede">there is no correct path, but you can look for one and call the looking progress.</p>
@@ -526,18 +563,18 @@ export default function Home() {
         </section>
       ) : farewell ? (
         <section className="farewell">
-          <p className="eyebrow">SESSION COMPLETE / CONNECTION CLOSING</p>
+          <p className="eyebrow">SESSION {String(sessionNumber).padStart(2, "0")} COMPLETE / CONNECTION CLOSING</p>
           <TypeText as="p" className="farewell-message" text="take care, my friend." speed={76} />
           <p className="signoff-code">END OF TRANSMISSION · {systemTime}</p>
           <button className="primary" onClick={restart}>[ RESTART ] <span>↺</span></button>
         </section>
       ) : finished ? (
         <section className="ending">
-          <p className="eyebrow">YOUR PATH / SESSION RECORD</p>
+          <p className="eyebrow">YOUR PATH / SESSION {String(sessionNumber).padStart(2, "0")} RECORD</p>
           <h1>YOU CHOSE.<br />TIME PASSED.</h1>
           <p className="closing">you act, you explain, you accuse yourself, then defend yourself. nothing is settled. you return to the beginning and find the room unchanged, but you are not. you are still here.</p>
-          <div className="route-summary"><span>20 RECORDS READ</span><span>NO CORRECT PATH FOUND</span><span>SESSION SAVED: NOW</span></div>
-          <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
+          <div className="route-summary"><span>20 RECORDS READ</span><span>{routeChanges === null ? "FIRST ROUTE RECORDED" : routeChanges === 0 ? "ROUTE REPEATED" : `NEW ROUTE · ${routeChanges} ${routeChanges === 1 ? "CHOICE" : "CHOICES"} CHANGED`}</span><span>SESSION SAVED: NOW</span></div>
+          <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={`${p === 0 ? "dim" : ""}${previousPath && previousPath[i] !== p ? " changed" : ""}`} />)}</div>
           <button className="primary" onClick={() => setFarewell(true)}>CLOSE SESSION <span>↵</span></button>
         </section>
       ) : (
