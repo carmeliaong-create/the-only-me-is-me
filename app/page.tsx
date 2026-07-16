@@ -325,6 +325,7 @@ function TypeText({ text, as: Tag = "h2", className = "", speed = 86 }: { text: 
     const timer = window.setInterval(() => {
       position += 1;
       setShown(text.slice(0, position));
+      if (!/\s/.test(text[position - 1] ?? "")) window.dispatchEvent(new Event("typing-character"));
       if (position >= text.length) window.clearInterval(timer);
     }, speed);
     return () => window.clearInterval(timer);
@@ -339,62 +340,70 @@ export default function Home() {
   const [reflection, setReflection] = useState<string | null>(null);
   const [path, setPath] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const contextRef = useRef<AudioContext | null>(null);
+  const musicRef = useRef<{ master: GainNode; timer: number } | null>(null);
   const finished = index >= scenes.length;
   const scene = scenes[index];
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
 
   function startMusic() {
-    if (audioRef.current) {
+    if (musicRef.current) {
+      const now = musicRef.current.master.context.currentTime;
+      musicRef.current.master.gain.setTargetAtTime(0.16, now, 0.18);
       void contextRef.current?.resume();
-      void audioRef.current.play();
       setSoundOn(true);
       return;
     }
-    const audio = new Audio("/audio/fading-pixel.mp3");
-    audio.loop = true;
-    audio.volume = 0.46;
-    audio.preload = "auto";
-    audioRef.current = audio;
     const context = new AudioContext();
     contextRef.current = context;
-    const source = context.createMediaElementSource(audio);
-    const highpass = context.createBiquadFilter();
-    const lowShelf = context.createBiquadFilter();
-    const hollowMid = context.createBiquadFilter();
-    const lowpass = context.createBiquadFilter();
-    const delay = context.createDelay(1);
-    const echo = context.createGain();
-    const dry = context.createGain();
-    highpass.type = "highpass";
-    highpass.frequency.value = 190;
-    highpass.Q.value = 0.7;
-    lowShelf.type = "lowshelf";
-    lowShelf.frequency.value = 520;
-    lowShelf.gain.value = -9;
-    hollowMid.type = "peaking";
-    hollowMid.frequency.value = 980;
-    hollowMid.Q.value = 0.85;
-    hollowMid.gain.value = -5.5;
-    lowpass.type = "lowpass";
-    lowpass.frequency.value = 3900;
-    lowpass.Q.value = 1.15;
-    dry.gain.value = 0.72;
-    delay.delayTime.value = 0.34;
-    echo.gain.value = 0.11;
-    source.connect(highpass).connect(lowShelf).connect(hollowMid).connect(lowpass);
-    lowpass.connect(dry).connect(context.destination);
-    lowpass.connect(delay).connect(echo).connect(context.destination);
+    const master = context.createGain();
+    const filter = context.createBiquadFilter();
+    master.gain.value = 0.16;
+    filter.type = "bandpass";
+    filter.frequency.value = 1850;
+    filter.Q.value = 0.62;
+    master.connect(filter).connect(context.destination);
+    const melody = [
+      67,72,75,74,72,75,72,74, 72,68,70,67,67,-1,-1,-1,
+      67,70,73,72,70,73,70,72, 70,67,68,65,65,-1,-1,-1,
+      65,68,72,71,68,67,68,70, 67,63,63,-1,67,72,75,74,
+      72,75,72,74,72,68,70,67, 67,-1,65,68,72,71,67,-1,
+    ];
+    const bass = [48,46,44,43,41,48,43,48];
+    const pulse = (midi: number, volume: number, decay: number, type: OscillatorType = "triangle") => {
+      const now = context.currentTime;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = type;
+      oscillator.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + 0.018);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+      oscillator.connect(gain).connect(master);
+      oscillator.start(now);
+      oscillator.stop(now + decay + 0.05);
+    };
+    let step = 0;
+    const playStep = () => {
+      const position = step % melody.length;
+      const note = melody[position];
+      if (note > 0 && !(position === 0 && step > 0)) {
+        pulse(note + 12, 0.038, position === melody.length - 2 ? 3.4 : 1.3);
+      }
+      if (step % 8 === 0) pulse(bass[Math.floor(step / 8) % bass.length], 0.009, 1.5, "sine");
+      step += 1;
+    };
     void context.resume();
-    void audio.play();
+    playStep();
+    const timer = window.setInterval(playStep, 468.75);
+    musicRef.current = { master, timer };
     setSoundOn(true);
   }
 
   function toggleMusic() {
-    if (!audioRef.current) return startMusic();
-    if (soundOn) audioRef.current.pause();
-    else void audioRef.current.play();
+    if (!musicRef.current) return startMusic();
+    const now = musicRef.current.master.context.currentTime;
+    musicRef.current.master.gain.setTargetAtTime(soundOn ? 0.0001 : 0.16, now, 0.16);
     setSoundOn(!soundOn);
   }
 
@@ -435,9 +444,28 @@ export default function Home() {
     return () => window.removeEventListener("keydown", onKey);
   });
 
+  useEffect(() => {
+    const onType = () => {
+      const context = contextRef.current;
+      if (!soundOn || !context || context.state !== "running") return;
+      const now = context.currentTime;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(76 + Math.random() * 12, now);
+      oscillator.frequency.exponentialRampToValueAtTime(58, now + 0.042);
+      gain.gain.setValueAtTime(0.0035, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.05);
+    };
+    window.addEventListener("typing-character", onType);
+    return () => window.removeEventListener("typing-character", onType);
+  }, [soundOn]);
+
   useEffect(() => () => {
-    audioRef.current?.pause();
-    if (audioRef.current) audioRef.current.currentTime = 0;
+    if (musicRef.current) window.clearInterval(musicRef.current.timer);
     void contextRef.current?.close();
   }, []);
 
