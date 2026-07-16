@@ -412,7 +412,7 @@ export default function Home() {
       const gain = context.createGain();
       oscillator.type = "square";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.006, now);
+      gain.gain.setValueAtTime(0.024, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(now);
