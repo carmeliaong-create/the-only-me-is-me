@@ -364,17 +364,17 @@ const scenes: Scene[] = [
   },
   {
     part: "III / RETURN",
-    title: "later, you think about the point where you turned back.",
-    body: "the moment does not reopen. what you chose remains. another chance may come. it may not.",
+    title: "you reach another point where you could turn back.",
+    body: "the earlier choice remains behind you. this time, the choice presents itself again. it will not always.",
     intentional: true,
     choices: [
       {
-        label: "sit with it.",
-        response: "you let the choice be true without making it permanent. regret is not a verdict.",
+        label: "continue from here.",
+        response: "you continue. not from the beginning.",
       },
       {
-        label: "change your mind for next time.",
-        response: "you prepare for a moment that does not exist yet. if it comes, you will have to choose again.",
+        label: "turn back from here.",
+        response: "you turn back. you do not return to where you were.",
       },
     ],
   },
