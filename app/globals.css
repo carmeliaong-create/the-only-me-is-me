@@ -19,8 +19,8 @@ header, footer { display:flex; justify-content:space-between; align-items:center
 .sound { border:0; background:none; color:var(--cold); padding:4px 0; cursor:pointer; letter-spacing:.12em; font-size:9px; }
 .sound:hover,.sound:focus-visible { color:var(--ink); outline:none; }
 .wordmark { color:var(--ink); border:0; background:none; padding:0; cursor:pointer; letter-spacing:.1em; }
-.intro,.scene,.ending,.farewell { width:min(920px,100%); margin:auto; position:relative; z-index:2; padding:42px; border:2px solid #404840; background:rgba(5,8,6,.78); box-shadow:inset 2px 2px 0 #697269,inset -2px -2px 0 #020302; animation:arrive .35s steps(3,end) both; }
-@keyframes arrive { from{opacity:0;filter:blur(3px);transform:translateY(8px)} }
+.intro,.scene,.ending,.farewell { width:min(920px,100%); margin:auto; position:relative; z-index:2; padding:42px; border:2px solid #404840; background:rgba(5,8,6,.78); box-shadow:inset 2px 2px 0 #697269,inset -2px -2px 0 #020302; animation:appear .35s steps(3,end) both; }
+@keyframes appear { from{opacity:0;filter:blur(3px);transform:translateY(8px)} }
 .intro { text-align:center; width:min(760px,100%); }
 .byline { margin:20px 0 -22px; color:var(--sepia); font-size:9px; letter-spacing:.22em; text-transform:lowercase; opacity:.72; }
 .eyebrow { font-size:10px; color:#a3a39f; letter-spacing:.14em; line-height:1.7; margin:0 0 28px; padding-bottom:8px; border-bottom:1px dotted #697069; }

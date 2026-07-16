@@ -349,7 +349,7 @@ const scenes: Scene[] = [
   {
     part: "III / RETURN",
     title: "no one is coming to authorize your life.",
-    body: "permission was useful while you believed it would arrive.",
+    body: "permission was useful while you believed someone else would grant it.",
     intentional: true,
     choices: [
       {
