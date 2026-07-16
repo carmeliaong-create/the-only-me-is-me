@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   root: "pages",
-  base: "/choose-your-own/",
+  base: "/the-only-me-is-me/",
   publicDir: "../public",
   plugins: [react()],
   build: {
