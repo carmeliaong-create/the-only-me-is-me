@@ -340,21 +340,53 @@ export default function Home() {
   const [path, setPath] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const contextRef = useRef<AudioContext | null>(null);
   const finished = index >= scenes.length;
   const scene = scenes[index];
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
 
   function startMusic() {
     if (audioRef.current) {
+      void contextRef.current?.resume();
       void audioRef.current.play();
       setSoundOn(true);
       return;
     }
     const audio = new Audio("/audio/fading-pixel.mp3");
     audio.loop = true;
-    audio.volume = 0.55;
+    audio.volume = 0.46;
     audio.preload = "auto";
     audioRef.current = audio;
+    const context = new AudioContext();
+    contextRef.current = context;
+    const source = context.createMediaElementSource(audio);
+    const highpass = context.createBiquadFilter();
+    const lowShelf = context.createBiquadFilter();
+    const hollowMid = context.createBiquadFilter();
+    const lowpass = context.createBiquadFilter();
+    const delay = context.createDelay(1);
+    const echo = context.createGain();
+    const dry = context.createGain();
+    highpass.type = "highpass";
+    highpass.frequency.value = 190;
+    highpass.Q.value = 0.7;
+    lowShelf.type = "lowshelf";
+    lowShelf.frequency.value = 520;
+    lowShelf.gain.value = -9;
+    hollowMid.type = "peaking";
+    hollowMid.frequency.value = 980;
+    hollowMid.Q.value = 0.85;
+    hollowMid.gain.value = -5.5;
+    lowpass.type = "lowpass";
+    lowpass.frequency.value = 3900;
+    lowpass.Q.value = 1.15;
+    dry.gain.value = 0.72;
+    delay.delayTime.value = 0.34;
+    echo.gain.value = 0.11;
+    source.connect(highpass).connect(lowShelf).connect(hollowMid).connect(lowpass);
+    lowpass.connect(dry).connect(context.destination);
+    lowpass.connect(delay).connect(echo).connect(context.destination);
+    void context.resume();
     void audio.play();
     setSoundOn(true);
   }
@@ -406,6 +438,7 @@ export default function Home() {
   useEffect(() => () => {
     audioRef.current?.pause();
     if (audioRef.current) audioRef.current.currentTime = 0;
+    void contextRef.current?.close();
   }, []);
 
   return (
