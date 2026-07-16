@@ -54,7 +54,7 @@ const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
     title: "you find an unfinished sketch.",
-    body: "you remember caring about it. you do not remember why you stopped. you begin looking for a moral explanation.",
+    body: "the date in the corner is six years old. you remember caring about it. you do not remember why you stopped.",
     choices: [
       {
         label: "close the notebook.",
@@ -69,7 +69,7 @@ const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
     title: "you leave work while the sun is setting.",
-    body: "you could stop and look. you have things to do. the screen will wait.",
+    body: "the light will be gone in eight minutes. you could stop and look. the screen will wait.",
     choices: [
       {
         label: "keep walking.",
@@ -99,7 +99,7 @@ const scenes: Scene[] = [
   {
     part: "I / GUILT + TIME",
     title: "you find an old photograph of yourself.",
-    body: "they look hopeful. you know what happens to them.",
+    body: "a date is printed along the bottom. they look hopeful. you know what happens to them.",
     choices: [
       {
         label: "say, “i’m sorry.”",
@@ -167,7 +167,7 @@ const scenes: Scene[] = [
   {
     part: "II / GRIEF",
     title: "a song they loved begins to play.",
-    body: "you did not choose it. this feels meaningful because you need things to feel meaningful.",
+    body: "it lasts three minutes and forty-two seconds. you did not choose it. this feels meaningful because you need things to feel meaningful.",
     choices: [
       {
         label: "let it play.",
@@ -238,7 +238,7 @@ const scenes: Scene[] = [
   {
     part: "III / RETURN",
     title: "you pass a place you once knew by heart.",
-    body: "the building is still there. the people inside it are not the people you remember. you had expected the place to keep your version of itself.",
+    body: "the clock above the door is twelve minutes slow. the building is still there. the people inside it are not the people you remember.",
     choices: [
       {
         label: "go inside.",
@@ -342,11 +342,22 @@ export default function Home() {
   const [reflection, setReflection] = useState<string | null>(null);
   const [path, setPath] = useState<number[]>([]);
   const [soundOn, setSoundOn] = useState(false);
+  const [systemTime, setSystemTime] = useState("00:00:00");
   const contextRef = useRef<AudioContext | null>(null);
   const musicRef = useRef<{ master: GainNode; timer: number } | null>(null);
   const finished = index >= scenes.length;
   const scene = scenes[index];
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      setSystemTime([now.getHours(), now.getMinutes(), now.getSeconds()].map((value) => String(value).padStart(2, "0")).join(":"));
+    };
+    updateClock();
+    const timer = window.setInterval(updateClock, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   function startMusic() {
     if (contextRef.current?.state === "closed") {
@@ -534,6 +545,7 @@ export default function Home() {
         <button className="wordmark" onClick={restart}>C:\MEMORY\TIME.EXE</button>
         <div className="status">
           <span className="connection">LINK:14.4K</span>
+          <span>TIME:{systemTime}</span>
           <button className="sound" onClick={toggleMusic} aria-label={soundOn ? "Mute music" : "Play music"}>{soundOn ? "MUSIC: ON" : "MUSIC: OFF"}</button>
           {started && !finished && <span>{String(index + 1).padStart(2, "0")} / {scenes.length}</span>}
         </div>
