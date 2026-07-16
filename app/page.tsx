@@ -319,13 +319,13 @@ function TypeText({ text, as: Tag = "h2", className = "", speed = 86 }: { text: 
   const [shown, setShown] = useState("");
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const mobile = window.matchMedia("(max-width: 640px)").matches;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches && !mobile) {
       setShown(text);
       return;
     }
     setShown("");
     let position = 0;
-    const mobile = window.matchMedia("(max-width: 640px)").matches;
     const intervalSpeed = mobile ? Math.min(speed, Tag === "p" ? 24 : 48) : speed;
     const timer = window.setInterval(() => {
       position += 1;
