@@ -49,9 +49,6 @@ h2 { max-width:800px; font-size:clamp(28px,4.4vw,52px); font-weight:400; letter-
 .choices button.pending em { opacity:1; }
 .reflection h2 { max-width:850px; margin-bottom:42px; }
 .reflection-actions { display:flex; align-items:stretch; gap:10px; flex-wrap:wrap; }
-.reconsider { min-width:230px; padding:15px 18px; border:1px solid #4a524a; color:var(--dim); background:#0d110e; cursor:pointer; letter-spacing:.08em; font-size:10px; }
-.reconsider:hover,.reconsider:focus-visible { border-color:#aeb7ad; color:var(--ink); outline:none; }
-.reconsider span { float:right; }
 .ending { text-align:center; max-width:760px; }
 .closing { max-width:650px; }
 .route-summary { width:min(560px,100%); margin:0 auto 28px; border:1px solid #414941; background:#0c100d; padding:10px 14px; display:grid; grid-template-columns:repeat(3,1fr); gap:8px; color:var(--dim); font-size:8px; line-height:1.5; letter-spacing:.1em; }
@@ -86,7 +83,6 @@ footer { align-self:end; border-width:1px 0 0; padding:10px 0 0; }
   .hint { margin-top:16px; font-size:8px; line-height:1.5; }
   .reflection h2 { margin-bottom:28px; }
   .reflection-actions { display:grid; grid-template-columns:1fr; }
-  .reconsider { width:100%; min-width:0; min-height:48px; padding:13px 14px; }
   .route-summary { grid-template-columns:1fr; margin-bottom:22px; }
   .pathline { flex-wrap:wrap; max-width:280px; gap:6px; margin-bottom:28px; }
   .pathline i { width:12px; }

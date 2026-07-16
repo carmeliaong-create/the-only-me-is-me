@@ -364,17 +364,17 @@ const scenes: Scene[] = [
   },
   {
     part: "III / RETURN",
-    title: "you reach the point where you usually turn back.",
-    body: "you have answered this already. the answer was not a contract. everything is as it was. you are not required to be.",
+    title: "later, you think about the point where you turned back.",
+    body: "the moment does not reopen. what you chose remains. another chance may come. it may not.",
     intentional: true,
     choices: [
       {
-        label: "continue.",
-        response: "you choose it again. repetition does not make the choice less yours.",
+        label: "sit with it.",
+        response: "you let the choice be true without making it permanent. regret is not a verdict.",
       },
       {
-        label: "choose differently.",
-        response: "you change your mind. nothing breaks. there is no shame in revision. only another choice.",
+        label: "change your mind for next time.",
+        response: "you prepare for a moment that does not exist yet. if it comes, you will have to choose again.",
       },
     ],
   },
@@ -579,13 +579,6 @@ export default function Home() {
     setIndex((i) => i + 1);
   }
 
-  function reconsider() {
-    if (!reflection || !scene?.intentional) return;
-    setPath((p) => p.slice(0, -1));
-    setPendingChoice(null);
-    setReflection(null);
-  }
-
   function restart() {
     if (finished && path.length === scenes.length) {
       setPreviousPath(path);
@@ -725,7 +718,6 @@ export default function Home() {
             <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} />
             <div className="reflection-actions">
-              {scene.intentional && <button className="reconsider" onClick={reconsider}>CHANGE YOUR MIND <span>↶</span></button>}
               <button className="primary" data-sound="continue" onClick={() => { playContinueBeep(); advance(); }}>
                 {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
               </button>
