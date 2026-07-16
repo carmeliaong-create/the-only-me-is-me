@@ -444,11 +444,29 @@ export default function Home() {
       const gain = context.createGain();
       oscillator.type = "square";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.298, now);
+      gain.gain.setValueAtTime(0.25, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(now);
       oscillator.stop(now + 0.08);
+    });
+  }
+
+  function playContinueBeep() {
+    const context = contextRef.current;
+    if (!context || context.state !== "running") return;
+    const now = context.currentTime;
+    [[880, 0], [1318.5, 0.065]].forEach(([frequency, delay]) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      const start = now + delay;
+      oscillator.type = "square";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.25, start);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.055);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(start);
+      oscillator.stop(start + 0.06);
     });
   }
 
@@ -488,7 +506,7 @@ export default function Home() {
         begin();
         window.setTimeout(playKeypadBeep, 0);
       } else if (reflection && (e.key === "Enter" || e.key === " ")) {
-        playKeypadBeep();
+        playContinueBeep();
         advance();
       }
       else if (started && !finished && !reflection && /^[1-3]$/.test(e.key)) {
@@ -507,7 +525,11 @@ export default function Home() {
   useEffect(() => {
     const onButtonClick = (event: MouseEvent) => {
       const target = event.target;
-      if (target instanceof Element && target.closest("button")) playKeypadBeep();
+      if (!(target instanceof Element)) return;
+      const button = target.closest("button");
+      if (!button) return;
+      if (button.dataset.sound === "continue") playContinueBeep();
+      else playKeypadBeep();
     };
     window.addEventListener("click", onButtonClick);
     return () => window.removeEventListener("click", onButtonClick);
@@ -597,7 +619,7 @@ export default function Home() {
           </> : <div className="reflection">
             <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} />
-            <button className="primary" onClick={advance}>
+            <button className="primary" data-sound="continue" onClick={advance}>
               {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
             </button>
           </div>}
