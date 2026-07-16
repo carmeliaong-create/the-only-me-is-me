@@ -364,6 +364,22 @@ const scenes: Scene[] = [
   },
   {
     part: "III / RETURN",
+    title: "you reach the point where you usually turn back.",
+    body: "you have answered this already. the answer was not a contract. everything is as it was. you are not required to be.",
+    intentional: true,
+    choices: [
+      {
+        label: "continue.",
+        response: "you choose it again. repetition does not make the choice less yours.",
+      },
+      {
+        label: "choose differently.",
+        response: "you change your mind. nothing breaks. there is no shame in revision. only another choice.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
     title: "you sit beside someone you love. neither of you speaks. the clock fills the silence.",
     body: "you have been here before. not here exactly. time does not circle, but you do. returning shows you what changed.",
     choices: [
@@ -563,6 +579,13 @@ export default function Home() {
     setIndex((i) => i + 1);
   }
 
+  function reconsider() {
+    if (!reflection || !scene?.intentional) return;
+    setPath((p) => p.slice(0, -1));
+    setPendingChoice(null);
+    setReflection(null);
+  }
+
   function restart() {
     if (finished && path.length === scenes.length) {
       setPreviousPath(path);
@@ -701,9 +724,12 @@ export default function Home() {
           </> : <div className="reflection">
             <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} />
-            <button className="primary" data-sound="continue" onClick={() => { playContinueBeep(); advance(); }}>
-              {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
-            </button>
+            <div className="reflection-actions">
+              {scene.intentional && <button className="reconsider" onClick={reconsider}>CHANGE YOUR MIND <span>↶</span></button>}
+              <button className="primary" data-sound="continue" onClick={() => { playContinueBeep(); advance(); }}>
+                {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
+              </button>
+            </div>
           </div>}
         </section>
       )}
