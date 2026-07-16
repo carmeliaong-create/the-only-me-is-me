@@ -444,7 +444,7 @@ export default function Home() {
       const gain = context.createGain();
       oscillator.type = "square";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.setValueAtTime(0.2, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(now);
@@ -456,17 +456,17 @@ export default function Home() {
     const context = contextRef.current;
     if (!context || context.state !== "running") return;
     const now = context.currentTime;
-    [[880, 0], [1318.5, 0.065]].forEach(([frequency, delay]) => {
+    [[659.25, 0], [783.99, 0.09], [987.77, 0.18]].forEach(([frequency, delay]) => {
       const oscillator = context.createOscillator();
       const gain = context.createGain();
       const start = now + delay;
-      oscillator.type = "square";
+      oscillator.type = "triangle";
       oscillator.frequency.value = frequency;
-      gain.gain.setValueAtTime(0.25, start);
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.055);
+      gain.gain.setValueAtTime(0.2, start);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.075);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(start);
-      oscillator.stop(start + 0.06);
+      oscillator.stop(start + 0.08);
     });
   }
 
