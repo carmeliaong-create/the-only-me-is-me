@@ -527,7 +527,7 @@ export default function Home() {
           <p className="eyebrow">PERSONAL SYSTEM / SESSION 01<br />A GAME ABOUT GUILT, TIME + GRIEF</p>
           <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
           <p className="byline">by carm</p>
-          <p className="lede">there is no correct path, but you can look for one. you will call the looking progress.</p>
+          <p className="lede">there is no correct path, but you can look for one and call the looking progress.</p>
           <button className="primary" onClick={begin}>[ ENTER SYSTEM ] <span>↵</span></button>
           <p className="hint">20 SCENES · 8–10 MINUTES · LOCAL MEMORY ENABLED</p>
         </section>
