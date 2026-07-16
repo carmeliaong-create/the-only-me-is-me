@@ -54,7 +54,7 @@ h2 { max-width:800px; font-size:clamp(28px,4.4vw,52px); font-weight:400; letter-
 .pathline i.dim { background:#555; box-shadow:none; }
 .farewell { text-align:center; width:min(720px,100%); min-height:420px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
 .farewell .eyebrow { align-self:stretch; }
-.farewell h1 { margin:auto 0; text-transform:lowercase; font-size:clamp(26px,4vw,44px); letter-spacing:.04em; }
+.farewell-message { margin:auto 0; color:var(--ink); font-size:10px; line-height:1.8; letter-spacing:.08em; text-transform:lowercase; }
 .signoff-code { color:#636a63; font-size:9px; letter-spacing:.16em; margin:30px 0 22px; }
 footer { align-self:end; border-width:1px 0 0; padding:10px 0 0; }
 @media (max-width:640px) { .screen{padding:28px 18px 22px;border-width:6px;outline-offset:-12px}.screen:after{inset:12px}.intro,.scene,.ending,.farewell{padding:34px 20px}.connection,footer span:first-child{display:none}.status{gap:10px}.choices button{grid-template-columns:44px 1fr auto;padding:14px 12px}h1{font-size:44px}.bodycopy{font-size:12px}.route-summary{grid-template-columns:1fr}.farewell{min-height:360px} }

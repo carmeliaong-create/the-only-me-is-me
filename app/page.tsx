@@ -571,7 +571,7 @@ export default function Home() {
       ) : farewell ? (
         <section className="farewell">
           <p className="eyebrow">SESSION COMPLETE / CONNECTION CLOSING</p>
-          <TypeText as="h1" text={"take care,\nmy friend."} speed={112} />
+          <TypeText as="p" className="farewell-message" text="take care, my friend." speed={76} />
           <p className="signoff-code">END OF TRANSMISSION · {systemTime}</p>
           <button className="primary" onClick={restart}>[ RESTART ] <span>↺</span></button>
         </section>
