@@ -325,7 +325,9 @@ function TypeText({ text, as: Tag = "h2", className = "", speed = 86 }: { text: 
     const timer = window.setInterval(() => {
       position += 1;
       setShown(text.slice(0, position));
-      if (!/\s/.test(text[position - 1] ?? "")) window.dispatchEvent(new Event("typing-character"));
+      if (!/\s/.test(text[position - 1] ?? "")) {
+        window.dispatchEvent(new CustomEvent("typing-character", { detail: { title: Tag !== "p" } }));
+      }
       if (position >= text.length) window.clearInterval(timer);
     }, speed);
     return () => window.clearInterval(timer);
@@ -416,9 +418,9 @@ export default function Home() {
     setStarted(true);
   }
 
-  function playSelectionBeep() {
+  function playKeypadBeep() {
     const context = contextRef.current;
-    if (!soundOn || !context || context.state !== "running") return;
+    if (!context || context.state !== "running") return;
     const now = context.currentTime;
     [697, 1209].forEach((frequency) => {
       const oscillator = context.createOscillator();
@@ -435,7 +437,6 @@ export default function Home() {
 
   function choose(choiceIndex: number) {
     if (!scene || reflection) return;
-    playSelectionBeep();
     setPath((p) => [...p, choiceIndex]);
     setReflection(scene.choices[choiceIndex].response ?? "you chose. now you will explain the choice to yourself.");
   }
@@ -454,11 +455,19 @@ export default function Home() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!started && (e.key === "Enter" || e.key === " ")) begin();
-      else if (reflection && (e.key === "Enter" || e.key === " ")) advance();
+      if (!started && (e.key === "Enter" || e.key === " ")) {
+        begin();
+        window.setTimeout(playKeypadBeep, 0);
+      } else if (reflection && (e.key === "Enter" || e.key === " ")) {
+        playKeypadBeep();
+        advance();
+      }
       else if (started && !finished && !reflection && /^[1-3]$/.test(e.key)) {
         const n = Number(e.key) - 1;
-        if (n < scene.choices.length) choose(n);
+        if (n < scene.choices.length) {
+          playKeypadBeep();
+          choose(n);
+        }
       }
     };
 
@@ -467,7 +476,16 @@ export default function Home() {
   });
 
   useEffect(() => {
-    const onType = () => {
+    const onButtonClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest("button")) playKeypadBeep();
+    };
+    window.addEventListener("click", onButtonClick);
+    return () => window.removeEventListener("click", onButtonClick);
+  }, []);
+
+  useEffect(() => {
+    const onType = (event: Event) => {
       const context = contextRef.current;
       if (!soundOn || !context || context.state !== "running") return;
       const now = context.currentTime;
@@ -476,14 +494,15 @@ export default function Home() {
       oscillator.type = "sine";
       oscillator.frequency.setValueAtTime(76 + Math.random() * 12, now);
       oscillator.frequency.exponentialRampToValueAtTime(58, now + 0.042);
-      gain.gain.setValueAtTime(0.0035, now);
+      const title = (event as CustomEvent<{ title?: boolean }>).detail?.title;
+      gain.gain.setValueAtTime(title ? 0.0052 : 0.0035, now);
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
       oscillator.connect(gain).connect(context.destination);
       oscillator.start(now);
       oscillator.stop(now + 0.05);
     };
-    window.addEventListener("typing-character", onType);
-    return () => window.removeEventListener("typing-character", onType);
+    window.addEventListener("typing-character", onType as EventListener);
+    return () => window.removeEventListener("typing-character", onType as EventListener);
   }, [soundOn]);
 
   useEffect(() => () => {
