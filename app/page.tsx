@@ -325,6 +325,8 @@ function TypeText({ text, as: Tag = "h2", className = "", speed = 86 }: { text: 
     }
     setShown("");
     let position = 0;
+    const mobile = window.matchMedia("(max-width: 640px)").matches;
+    const intervalSpeed = mobile ? Math.min(speed, Tag === "p" ? 24 : 48) : speed;
     const timer = window.setInterval(() => {
       position += 1;
       setShown(text.slice(0, position));
@@ -332,9 +334,9 @@ function TypeText({ text, as: Tag = "h2", className = "", speed = 86 }: { text: 
         window.dispatchEvent(new CustomEvent("typing-character", { detail: { title: Tag !== "p" } }));
       }
       if (position >= text.length) window.clearInterval(timer);
-    }, speed);
+    }, intervalSpeed);
     return () => window.clearInterval(timer);
-  }, [speed, text]);
+  }, [Tag, speed, text]);
 
   return <Tag className={`typed ${className}`} aria-label={text}><span aria-hidden="true">{shown}<span className="cursor">█</span></span></Tag>;
 }
@@ -576,7 +578,7 @@ export default function Home() {
         <button className="wordmark" onClick={restart}>C:\MEMORY\TIME.EXE</button>
         <div className="status">
           <span className="connection">LINK:14.4K</span>
-          <span>TIME:{systemTime}</span>
+          <span className="system-clock">TIME:{systemTime}</span>
           <button className="sound" onClick={toggleMusic} aria-label={soundOn ? "Mute music" : "Play music"}>{soundOn ? "MUSIC: ON" : "MUSIC: OFF"}</button>
           {started && !finished && <span>{String(index + 1).padStart(2, "0")} / {scenes.length}</span>}
         </div>
