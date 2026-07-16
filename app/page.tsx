@@ -345,7 +345,7 @@ export default function Home() {
   const [soundOn, setSoundOn] = useState(false);
   const [systemTime, setSystemTime] = useState("00:00:00");
   const contextRef = useRef<AudioContext | null>(null);
-  const musicRef = useRef<{ master: GainNode; timer: number } | null>(null);
+  const musicRef = useRef<HTMLAudioElement | null>(null);
   const finished = index >= scenes.length;
   const scene = scenes[index];
   const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
@@ -361,64 +361,19 @@ export default function Home() {
   }, []);
 
   function startMusic() {
-    if (contextRef.current?.state === "closed") {
-      contextRef.current = null;
-      musicRef.current = null;
-    }
+    if (!contextRef.current || contextRef.current.state === "closed") contextRef.current = new AudioContext();
+    void contextRef.current.resume();
     if (musicRef.current) {
-      const now = musicRef.current.master.context.currentTime;
-      musicRef.current.master.gain.setTargetAtTime(0.16, now, 0.18);
-      void contextRef.current?.resume();
+      void musicRef.current.play();
       setSoundOn(true);
       return;
     }
-    const context = new AudioContext();
-    contextRef.current = context;
-    const master = context.createGain();
-    const filter = context.createBiquadFilter();
-    master.gain.value = 0.16;
-    filter.type = "bandpass";
-    filter.frequency.value = 1850;
-    filter.Q.value = 0.62;
-    master.connect(filter).connect(context.destination);
-    // Dominant lead contour extracted from the user-provided Fading Pixel MP3,
-    // reduced to monophonic note/duration pairs for an old-cellphone voice.
-    const melody: Array<[number, number]> = [
-      [72,4],[75,3],[79,8],[60,4],[63,3],[67,4],[75,4],[77,3],
-      [75,4],[74,9],[62,5],[67,7],[70,7],[63,1],[72,7],[63,2],
-      [72,2],[75,4],[74,7],[72,7],[67,12],[67,2],[63,8],[67,4],
-      [70,3],[68,15],[60,7],[72,5],[75,3],[67,11],[77,4],[74,6],
-      [62,2],[74,1],[62,2],[72,3],[74,1],[75,4],[77,7],[60,1],
-      [75,3],[68,6],[67,1],[70,7],[72,8],
-    ];
-    const pulse = (midi: number, volume: number, decay: number, type: OscillatorType = "square") => {
-      const now = context.currentTime;
-      const oscillator = context.createOscillator();
-      const gain = context.createGain();
-      oscillator.type = type;
-      oscillator.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
-      gain.gain.setValueAtTime(0.0001, now);
-      gain.gain.exponentialRampToValueAtTime(volume, now + 0.018);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
-      oscillator.connect(gain).connect(master);
-      oscillator.start(now);
-      oscillator.stop(now + decay + 0.05);
-    };
-    let eventIndex = 0;
-    let remaining = 0;
-    const playStep = () => {
-      if (remaining <= 0) {
-        const [note, duration] = melody[eventIndex];
-        pulse(note, 0.026, Math.max(0.1, duration * 0.118));
-        remaining = duration;
-        eventIndex = (eventIndex + 1) % melody.length;
-      }
-      remaining -= 1;
-    };
-    void context.resume();
-    playStep();
-    const timer = window.setInterval(playStep, 125);
-    musicRef.current = { master, timer };
+    const music = new Audio(`${import.meta.env.BASE_URL}audio/falling-pixels.mp3`);
+    music.loop = true;
+    music.preload = "auto";
+    music.volume = 0.24;
+    musicRef.current = music;
+    void music.play();
     setSoundOn(true);
   }
 
@@ -426,6 +381,7 @@ export default function Home() {
     startMusic();
     const resumeAutoplay = () => {
       if (contextRef.current?.state === "suspended") void contextRef.current.resume();
+      if (musicRef.current) void musicRef.current.play();
     };
     window.addEventListener("pointerdown", resumeAutoplay, { once: true });
     window.addEventListener("keydown", resumeAutoplay, { once: true });
@@ -437,8 +393,8 @@ export default function Home() {
 
   function toggleMusic() {
     if (!musicRef.current) return startMusic();
-    const now = musicRef.current.master.context.currentTime;
-    musicRef.current.master.gain.setTargetAtTime(soundOn ? 0.0001 : 0.16, now, 0.16);
+    if (soundOn) musicRef.current.pause();
+    else void musicRef.current.play();
     setSoundOn(!soundOn);
   }
 
@@ -542,7 +498,7 @@ export default function Home() {
   }, [soundOn]);
 
   useEffect(() => () => {
-    if (musicRef.current) window.clearInterval(musicRef.current.timer);
+    musicRef.current?.pause();
     void contextRef.current?.close();
   }, []);
 
