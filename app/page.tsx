@@ -403,7 +403,7 @@ export default function Home() {
     const music = new Audio(`${import.meta.env.BASE_URL}audio/falling-pixels.mp3`);
     music.loop = true;
     music.preload = "auto";
-    music.volume = 0.3;
+    music.volume = 0.33;
     musicRef.current = music;
     void music.play();
     setSoundOn(true);
