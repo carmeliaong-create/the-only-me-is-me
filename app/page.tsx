@@ -579,7 +579,8 @@ export default function Home() {
         <section className="ending">
           <p className="eyebrow">YOUR PATH / SESSION RECORD</p>
           <h1>YOU CHOSE.<br />TIME PASSED.</h1>
-          <p className="closing">you acted. you explained. you accused yourself. you defended yourself. nothing was settled. time did not ask for a verdict. you returned to the beginning and found the room unchanged. you were not. you are still here. i love you. i always will.</p>
+          <p className="closing">you act, you explain, you accuse yourself, then defend yourself. nothing is settled. you return to the beginning and find the room unchanged, but you are not. you are still here.</p>
+          <p className="love-message">i love you. i always will.</p>
           <div className="route-summary"><span>20 RECORDS READ</span><span>NO CORRECT PATH FOUND</span><span>SESSION SAVED: NOW</span></div>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
           <button className="primary" onClick={() => setFarewell(true)}>CLOSE SESSION <span>↵</span></button>
