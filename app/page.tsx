@@ -1,0 +1,618 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+
+type Choice = { label: string; response?: string };
+type Scene = { part: string; title: string; body?: string; choices: Choice[] };
+
+const scenes: Scene[] = [
+  {
+    part: "I / GUILT + TIME",
+    title: "you are sitting beside someone you love. the clock is loud.",
+    body: "you could tell them what they mean to you. you could also wait. waiting feels harmless while you are doing it.",
+    choices: [
+      {
+        label: "say nothing.",
+        response: "you were afraid. that is true. you loved them. that is also true. one truth does not cancel the other.",
+      },
+      {
+        label: "say something.",
+        response: "you said it. now it exists outside you. this is what you wanted. you are still afraid.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "morning comes. you have not slept.",
+    body: "the light comes in through the blinds. it is not forgiving you. it is not accusing you. it is light.",
+    choices: [
+      {
+        label: "turn away.",
+        response: "you turn away because you are tired. later, you may call it avoidance. there are always more precise charges available.",
+      },
+      {
+        label: "let it reach you.",
+        response: "you lie still. nothing changes. for a moment, you do not require change.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "a child asks if you are old.",
+    body: "you are not old. you are older than you were. this has been happening the entire time.",
+    choices: [
+      {
+        label: "say, “no. i’m cool.”",
+        response: "the child does not believe you. you think about it later.",
+      },
+      {
+        label: "say, “we are all decaying at the same rate.”",
+        response: "this is not strictly true. it feels true enough. the child leaves.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "you find an unfinished sketch.",
+    body: "the date in the corner is six years old. you remember caring about it. you do not remember why you stopped.",
+    choices: [
+      {
+        label: "close the notebook.",
+        response: "you did not finish it. you call it laziness. later, you call it exhaustion. the name changes when you want grace.",
+      },
+      {
+        label: "leave it open.",
+        response: "it remains unfinished. it also remains. you are not sure which fact matters more.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "you leave work while the sun is setting.",
+    body: "the light will be gone in eight minutes. you could stop and look. the screen will wait.",
+    choices: [
+      {
+        label: "keep walking.",
+        response: "you miss it. there will be another sunset. this is how most losses become acceptable.",
+      },
+      {
+        label: "stop and watch.",
+        response: "you notice it. it ends anyway. noticing was not useless. it was also not enough to save it.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "a stranger is crying on the train.",
+    body: "you do not know them. you are relieved by this. you are ashamed of the relief.",
+    choices: [
+      {
+        label: "look at them.",
+        response: "they see that you saw. it may have been kind. kindness is sometimes the smallest available action.",
+      },
+      {
+        label: "leave a napkin beside them.",
+        response: "you leave before they can thank you. you prefer kindness without witnesses. you prefer many things without witnesses.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "you find an old photograph of yourself.",
+    body: "a date is printed along the bottom. they look hopeful. you know what happens to them.",
+    choices: [
+      {
+        label: "say, “i’m sorry.”",
+        response: "you begin listing the ways you failed them. the list does not end.",
+      },
+      {
+        label: "say, “i’m still here.”",
+        response: "this sounds like a defense. it may also be an achievement. you do not know how much credit survival deserves.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "someone asks how you are.",
+    body: "you could answer honestly. you could be polite. you have confused these before.",
+    choices: [
+      {
+        label: "say, “i’m fine.”",
+        response: "the conversation continues. no one is harmed. you wonder whether this makes the lie harmless.",
+      },
+      {
+        label: "say, “not well.”",
+        response: "they pause. now your pain has entered the room and become partly their problem. you apologize for this without speaking.",
+      },
+      {
+        label: "make a joke.",
+        response: "they laugh. you laugh. the truth survives in a form everyone can tolerate.",
+      },
+    ],
+  },
+  {
+    part: "I / GUILT + TIME",
+    title: "it is three in the afternoon. you are still in bed.",
+    body: "you have lost most of the day. you begin calculating what a better person would have done with it.",
+    choices: [
+      {
+        label: "stay there.",
+        response: "another hour passes. now there is more evidence. guilt is efficient this way.",
+      },
+      {
+        label: "get up.",
+        response: "you get up late. the day is not restored. you do one thing. then another. this is either discipline or a very small life.",
+      },
+      {
+        label: "say, “at least i didn’t miss tomorrow.”",
+        response: "you laugh. the ceiling does not. you get up anyway. you decide this counts. you keep deciding what qualifies.",
+      },
+    ],
+  },
+  {
+    part: "II / GRIEF",
+    title: "you find their handwriting on an old note.",
+    body: "the note says nothing important. this makes it worse. they expected to write again.",
+    choices: [
+      {
+        label: "laugh at how messy it is.",
+        response: "for a second, they are not dead. they are only bad at handwriting. then they are dead again.",
+      },
+      {
+        label: "trace the letters.",
+        response: "you follow the pressure of their hand. the mark ends where their hand stopped. there is nowhere else to go.",
+      },
+    ],
+  },
+  {
+    part: "II / GRIEF",
+    title: "a song they loved begins to play.",
+    body: "it lasts three minutes and forty-two seconds. you did not choose it. this feels meaningful because you need things to feel meaningful.",
+    choices: [
+      {
+        label: "let it play.",
+        response: "you listen for them inside it. you find yourself instead. this is not what you wanted.",
+      },
+      {
+        label: "speak to the empty room.",
+        response: "you say their name. no one answers. you knew no one would, but you said it anyway.",
+      },
+    ],
+  },
+  {
+    part: "II / GRIEF",
+    title: "you dream they are alive.",
+    body: "in the dream, nothing is repaired because nothing happened. then you wake up and everything has happened again.",
+    choices: [
+      {
+        label: "try to fall back asleep.",
+        response: "you cannot return on command. memory is not a place. sleep is not absolution. you can keep trying.",
+      },
+      {
+        label: "say, “thank you for visiting.”",
+        response: "you do not know who you are thanking. there may be no one. gratitude occurs without a recipient.",
+      },
+    ],
+  },
+  {
+    part: "II / GRIEF",
+    title: "their things are still here.",
+    body: "a jacket. a book. a scarf. ordinary objects made difficult by ownership.",
+    choices: [
+      {
+        label: "keep something small.",
+        response: "you take the object. you tell yourself it is not stealing. the dead cannot grant permission. the dead cannot object.",
+      },
+      {
+        label: "promise to care for it.",
+        response: "you make a promise to an object because objects are easier to keep than people. this is not your fault. you feel guilty anyway.",
+      },
+    ],
+  },
+  {
+    part: "II / GRIEF",
+    title: "someone says they would not want you to be sad.",
+    body: "they are trying to help. you resent them for failing. you resent yourself for the resentment.",
+    choices: [
+      {
+        label: "feel sad anyway.",
+        response: "you do. grief moves through you without permission. it does not matter what you wanted.",
+      },
+    ],
+  },
+  {
+    part: "II / GRIEF",
+    title: "you are laughing. then you remember them.",
+    body: "they would have loved this. you think this whenever joy finds you without them.",
+    choices: [
+      {
+        label: "keep laughing.",
+        response: "you laugh for yourself. then for them. then you feel guilty for turning your life into a memorial. you keep laughing.",
+      },
+      {
+        label: "say what they would have said.",
+        response: "you hear them in your own voice. this comforts you. this frightens you. you say it again.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "you pass a place you once knew by heart.",
+    body: "the clock above the door is twelve minutes slow. the building is still there. the people inside it are not the people you remember.",
+    choices: [
+      {
+        label: "go inside.",
+        response: "the room is smaller. you are disappointed by this, as though memory had promised accurate measurements.",
+      },
+      {
+        label: "keep walking.",
+        response: "you preserve the room by refusing to see it. this is one way of caring for something. it is also one way of losing it twice.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "someone forgives you before you finish apologizing.",
+    body: "you had prepared evidence. you had prepared a sentence. without punishment, you do not know where to put either one.",
+    choices: [
+      {
+        label: "believe them.",
+        response: "you try. you have practiced the opposite for longer.",
+      },
+      {
+        label: "explain why they should not.",
+        response: "you ask them to offer clemency. they do not. you wonder why their judgment only counts when it hurts.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "you notice that you have become someone your younger self needed.",
+    body: "not entirely or consistently. only enough to recognize the outline.",
+    choices: [
+      {
+        label: "allow yourself to be proud.",
+        response: "pride feels suspicious. you let it stay for one minute. then another. nothing terrible happens.",
+      },
+      {
+        label: "list what is still wrong.",
+        response: "the list is accurate. it is not complete. accuracy and completeness have never been the same thing.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "the same kind of morning returns.",
+    body: "light through the blinds. an unfinished day. you are not the person you were the first time. you are not free of them either.",
+    choices: [
+      {
+        label: "turn away.",
+        response: "you turn away. this time, you do not build a case against yourself. you are tired. the light will still be there.",
+      },
+      {
+        label: "let it reach you.",
+        response: "the light reaches you exactly as before. you receive it differently. from inside, change looks like this.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "you are sitting beside someone you love. the clock is loud.",
+    body: "you have been here before. not here exactly. time does not circle, but you do. returning shows you what changed.",
+    choices: [
+      {
+        label: "say nothing for a moment. then speak.",
+        response: "the silence was not failure. the speaking is not rescue. both belong to you.",
+      },
+      {
+        label: "take their hand.",
+        response: "you cannot stop the clock. you do not need to. for one moment, you are not asking the moment to last in order to let it matter.",
+      },
+    ],
+  },
+];
+
+function TypeText({ text, as: Tag = "h2", className = "", speed = 86 }: { text: string; as?: "h1" | "h2" | "p"; className?: string; speed?: number }) {
+  const [shown, setShown] = useState("");
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(text);
+      return;
+    }
+    setShown("");
+    let position = 0;
+    const timer = window.setInterval(() => {
+      position += 1;
+      setShown(text.slice(0, position));
+      if (!/\s/.test(text[position - 1] ?? "")) {
+        window.dispatchEvent(new CustomEvent("typing-character", { detail: { title: Tag !== "p" } }));
+      }
+      if (position >= text.length) window.clearInterval(timer);
+    }, speed);
+    return () => window.clearInterval(timer);
+  }, [speed, text]);
+
+  return <Tag className={`typed ${className}`} aria-label={text}><span aria-hidden="true">{shown}<span className="cursor">█</span></span></Tag>;
+}
+
+export default function Home() {
+  const [started, setStarted] = useState(false);
+  const [index, setIndex] = useState(0);
+  const [reflection, setReflection] = useState<string | null>(null);
+  const [path, setPath] = useState<number[]>([]);
+  const [farewell, setFarewell] = useState(false);
+  const [soundOn, setSoundOn] = useState(false);
+  const [systemTime, setSystemTime] = useState("00:00:00");
+  const contextRef = useRef<AudioContext | null>(null);
+  const musicRef = useRef<{ master: GainNode; timer: number } | null>(null);
+  const finished = index >= scenes.length;
+  const scene = scenes[index];
+  const progress = useMemo(() => Math.round((index / scenes.length) * 100), [index]);
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      setSystemTime([now.getHours(), now.getMinutes(), now.getSeconds()].map((value) => String(value).padStart(2, "0")).join(":"));
+    };
+    updateClock();
+    const timer = window.setInterval(updateClock, 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  function startMusic() {
+    if (contextRef.current?.state === "closed") {
+      contextRef.current = null;
+      musicRef.current = null;
+    }
+    if (musicRef.current) {
+      const now = musicRef.current.master.context.currentTime;
+      musicRef.current.master.gain.setTargetAtTime(0.16, now, 0.18);
+      void contextRef.current?.resume();
+      setSoundOn(true);
+      return;
+    }
+    const context = new AudioContext();
+    contextRef.current = context;
+    const master = context.createGain();
+    const filter = context.createBiquadFilter();
+    master.gain.value = 0.16;
+    filter.type = "bandpass";
+    filter.frequency.value = 1850;
+    filter.Q.value = 0.62;
+    master.connect(filter).connect(context.destination);
+    // Dominant lead contour extracted from the user-provided Fading Pixel MP3,
+    // reduced to monophonic note/duration pairs for an old-cellphone voice.
+    const melody: Array<[number, number]> = [
+      [72,4],[75,3],[79,8],[60,4],[63,3],[67,4],[75,4],[77,3],
+      [75,4],[74,9],[62,5],[67,7],[70,7],[63,1],[72,7],[63,2],
+      [72,2],[75,4],[74,7],[72,7],[67,12],[67,2],[63,8],[67,4],
+      [70,3],[68,15],[60,7],[72,5],[75,3],[67,11],[77,4],[74,6],
+      [62,2],[74,1],[62,2],[72,3],[74,1],[75,4],[77,7],[60,1],
+      [75,3],[68,6],[67,1],[70,7],[72,8],
+    ];
+    const pulse = (midi: number, volume: number, decay: number, type: OscillatorType = "square") => {
+      const now = context.currentTime;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = type;
+      oscillator.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + 0.018);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+      oscillator.connect(gain).connect(master);
+      oscillator.start(now);
+      oscillator.stop(now + decay + 0.05);
+    };
+    let eventIndex = 0;
+    let remaining = 0;
+    const playStep = () => {
+      if (remaining <= 0) {
+        const [note, duration] = melody[eventIndex];
+        pulse(note, 0.026, Math.max(0.1, duration * 0.118));
+        remaining = duration;
+        eventIndex = (eventIndex + 1) % melody.length;
+      }
+      remaining -= 1;
+    };
+    void context.resume();
+    playStep();
+    const timer = window.setInterval(playStep, 125);
+    musicRef.current = { master, timer };
+    setSoundOn(true);
+  }
+
+  useEffect(() => {
+    startMusic();
+    const resumeAutoplay = () => {
+      if (contextRef.current?.state === "suspended") void contextRef.current.resume();
+    };
+    window.addEventListener("pointerdown", resumeAutoplay, { once: true });
+    window.addEventListener("keydown", resumeAutoplay, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", resumeAutoplay);
+      window.removeEventListener("keydown", resumeAutoplay);
+    };
+  }, []);
+
+  function toggleMusic() {
+    if (!musicRef.current) return startMusic();
+    const now = musicRef.current.master.context.currentTime;
+    musicRef.current.master.gain.setTargetAtTime(soundOn ? 0.0001 : 0.16, now, 0.16);
+    setSoundOn(!soundOn);
+  }
+
+  function begin() {
+    startMusic();
+    setStarted(true);
+  }
+
+  function playKeypadBeep() {
+    const context = contextRef.current;
+    if (!context || context.state !== "running") return;
+    const now = context.currentTime;
+    [697, 1209].forEach((frequency) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "square";
+      oscillator.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.006, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.08);
+    });
+  }
+
+  function choose(choiceIndex: number) {
+    if (!scene || reflection) return;
+    setPath((p) => [...p, choiceIndex]);
+    setReflection(scene.choices[choiceIndex].response ?? "you chose. now you will explain the choice to yourself.");
+  }
+
+  function advance() {
+    setReflection(null);
+    setIndex((i) => i + 1);
+  }
+
+  function restart() {
+    setStarted(false);
+    setIndex(0);
+    setPath([]);
+    setReflection(null);
+    setFarewell(false);
+  }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (farewell && (e.key === "Enter" || e.key === " ")) {
+        playKeypadBeep();
+        restart();
+      } else if (finished && (e.key === "Enter" || e.key === " ")) {
+        playKeypadBeep();
+        setFarewell(true);
+      } else if (!started && (e.key === "Enter" || e.key === " ")) {
+        begin();
+        window.setTimeout(playKeypadBeep, 0);
+      } else if (reflection && (e.key === "Enter" || e.key === " ")) {
+        playKeypadBeep();
+        advance();
+      }
+      else if (started && !finished && !reflection && /^[1-3]$/.test(e.key)) {
+        const n = Number(e.key) - 1;
+        if (n < scene.choices.length) {
+          playKeypadBeep();
+          choose(n);
+        }
+      }
+    };
+
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  useEffect(() => {
+    const onButtonClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest("button")) playKeypadBeep();
+    };
+    window.addEventListener("click", onButtonClick);
+    return () => window.removeEventListener("click", onButtonClick);
+  }, []);
+
+  useEffect(() => {
+    const onType = (event: Event) => {
+      const context = contextRef.current;
+      if (!soundOn || !context || context.state !== "running") return;
+      const now = context.currentTime;
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(76 + Math.random() * 12, now);
+      oscillator.frequency.exponentialRampToValueAtTime(58, now + 0.042);
+      const title = (event as CustomEvent<{ title?: boolean }>).detail?.title;
+      gain.gain.setValueAtTime(title ? 0.0052 : 0.0035, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.05);
+    };
+    window.addEventListener("typing-character", onType as EventListener);
+    return () => window.removeEventListener("typing-character", onType as EventListener);
+  }, [soundOn]);
+
+  useEffect(() => () => {
+    if (musicRef.current) window.clearInterval(musicRef.current.timer);
+    void contextRef.current?.close();
+  }, []);
+
+  return (
+    <main className="screen">
+      <div className="noise" aria-hidden="true" />
+      <header>
+        <button className="wordmark" onClick={restart}>C:\MEMORY\TIME.EXE</button>
+        <div className="status">
+          <span className="connection">LINK:14.4K</span>
+          <span>TIME:{systemTime}</span>
+          <button className="sound" onClick={toggleMusic} aria-label={soundOn ? "Mute music" : "Play music"}>{soundOn ? "MUSIC: ON" : "MUSIC: OFF"}</button>
+          {started && !finished && <span>{String(index + 1).padStart(2, "0")} / {scenes.length}</span>}
+        </div>
+      </header>
+
+      {!started ? (
+        <section className="intro">
+          <p className="eyebrow">PERSONAL SYSTEM / SESSION 01<br />A GAME ABOUT GUILT, TIME + GRIEF</p>
+          <TypeText as="h1" text={"YOU DO NOT\nHAVE TO\nJUSTIFY YOURSELF."} />
+          <p className="byline">by carm</p>
+          <p className="lede">there is no correct path, but you can look for one and call the looking progress.</p>
+          <button className="primary" onClick={begin}>[ ENTER SYSTEM ] <span>↵</span></button>
+          <p className="hint">20 SCENES · 8–10 MINUTES · LOCAL MEMORY ENABLED</p>
+        </section>
+      ) : farewell ? (
+        <section className="farewell">
+          <p className="eyebrow">SESSION COMPLETE / CONNECTION CLOSING</p>
+          <TypeText as="h1" text={"TAKE CARE,\nMY FRIEND."} speed={112} />
+          <p className="signoff-code">END OF TRANSMISSION · {systemTime}</p>
+          <button className="primary" onClick={restart}>[ RESTART ] <span>↺</span></button>
+        </section>
+      ) : finished ? (
+        <section className="ending">
+          <p className="eyebrow">YOUR PATH / SESSION RECORD</p>
+          <h1>YOU CHOSE.<br />TIME PASSED.</h1>
+          <p className="closing">you act, you explain, you accuse yourself, then defend yourself. nothing is settled. you return to the beginning and find the room unchanged, but you are not. you are still here.</p>
+          <p className="love-message">i love you. i always will.</p>
+          <div className="route-summary"><span>20 RECORDS READ</span><span>NO CORRECT PATH FOUND</span><span>SESSION SAVED: NOW</span></div>
+          <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={p === 0 ? "dim" : ""} />)}</div>
+          <button className="primary" onClick={() => setFarewell(true)}>CLOSE SESSION <span>↵</span></button>
+        </section>
+      ) : (
+        <section className="scene" aria-live="polite">
+          <div className="progress"><i style={{ width: `${progress}%` }} /></div>
+          {!reflection ? <>
+            <p className="eyebrow">DIR / PART_{scene.part} / RECORD_{String(index + 1).padStart(2, "0")}</p>
+            <TypeText key={`question-${index}`} text={scene.title} />
+            {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} />}
+            <div className="choices">
+              {scene.choices.map((choice, i) => (
+                <button key={choice.label} onClick={() => choose(i)}>
+                  <b>[0{i + 1}]</b>
+                  <span>{choice.label}</span>
+                  <em>_</em>
+                </button>
+              ))}
+            </div>
+            <p className="hint">SELECT RECORD: PRESS 1–{scene.choices.length}</p>
+          </> : <div className="reflection">
+            <p className="eyebrow">YOU CHOSE</p>
+            <TypeText key={`result-${index}`} text={reflection} />
+            <button className="primary" onClick={advance}>
+              {index === scenes.length - 1 ? "SEE YOUR PATH" : "CONTINUE"} <span>↵</span>
+            </button>
+          </div>}
+        </section>
+      )}
+
+      <footer><span>SYS/1997 · TIME PASSES ANYWAY.</span><span>MEM: 640K · © NOW</span></footer>
+    </main>
+  );
+}
