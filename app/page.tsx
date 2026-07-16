@@ -732,7 +732,7 @@ export default function Home() {
             <p className="eyebrow">DIR / PART_{scene.part} / RECORD_{String(index + 1).padStart(2, "0")}</p>
             <TypeText key={`question-${index}`} text={scene.title} onComplete={() => setTitleComplete(true)} />
             {scene.body && titleComplete && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} onComplete={() => setBodyComplete(true)} />}
-            {titleComplete && <><div className={`choices${sceneComplete ? "" : " loading"}`}>
+            <><div className={`choices${sceneComplete ? "" : " loading"}`}>
               {scene.choices.map((choice, i) => (
                 <button key={choice.label} className={pendingChoice === i ? "pending" : ""} data-sound="selection" disabled={!sceneComplete} onClick={() => { playKeypadBeep(); choose(i); }}>
                   <b>[0{i + 1}]</b>
@@ -742,7 +742,7 @@ export default function Home() {
               ))}
             </div>
             <p className="hint">{!sceneComplete ? "RECORD LOADING..." : scene.intentional ? pendingChoice === null ? "SELECT RECORD. PRESS AGAIN TO CONFIRM." : "CONFIRM OR CHOOSE AGAIN." : `SELECT RECORD: PRESS 1–${scene.choices.length}`}</p>
-            </>}
+            </>
           </> : <div className="reflection">
             <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} onComplete={() => setReflectionComplete(true)} />
