@@ -23,7 +23,7 @@ const scenes: Scene[] = [
   },
   {
     part: "I / GUILT + TIME",
-    title: "morning arrives. you have not slept.",
+    title: "morning comes. you have not slept.",
     body: "the light comes in through the blinds. it is not forgiving you. it is not accusing you. it is light.",
     choices: [
       {
@@ -160,7 +160,7 @@ const scenes: Scene[] = [
       },
       {
         label: "trace the letters.",
-        response: "you follow the pressure of their hand. you arrive where their hand stopped. there is nowhere else to go.",
+        response: "you follow the pressure of their hand. the mark ends where their hand stopped. there is nowhere else to go.",
       },
     ],
   },
@@ -223,7 +223,7 @@ const scenes: Scene[] = [
   {
     part: "II / GRIEF",
     title: "you are laughing. then you remember them.",
-    body: "they would have loved this. you think this every time joy arrives without them.",
+    body: "they would have loved this. you think this whenever joy finds you without them.",
     choices: [
       {
         label: "keep laughing.",
@@ -257,7 +257,7 @@ const scenes: Scene[] = [
     choices: [
       {
         label: "believe them.",
-        response: "you try. belief arrives slowly. you have practiced the opposite for longer.",
+        response: "you try. belief takes its time. you have practiced the opposite for longer.",
       },
       {
         label: "explain why they should not.",
@@ -282,7 +282,7 @@ const scenes: Scene[] = [
   },
   {
     part: "III / RETURN",
-    title: "the same kind of morning arrives again.",
+    title: "the same kind of morning returns.",
     body: "light through the blinds. an unfinished day. you are not the person you were the first time. you are not free of them either.",
     choices: [
       {
