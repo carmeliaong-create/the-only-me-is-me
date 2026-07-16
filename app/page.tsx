@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 type Choice = { label: string; response?: string };
-type Scene = { part: string; title: string; body?: string; choices: Choice[] };
+type Scene = { part: string; title: string; body?: string; choices: Choice[]; intentional?: boolean };
 
 const SESSION_COUNT_KEY = "time-passes-anyway-session-count";
 const LAST_ROUTE_KEY = "time-passes-anyway-last-route";
@@ -300,6 +300,70 @@ const scenes: Scene[] = [
   },
   {
     part: "III / RETURN",
+    title: "you know what must change. you have known for some time.",
+    body: "knowing has become another form of waiting. it asks nothing of you.",
+    intentional: true,
+    choices: [
+      {
+        label: "name it.",
+        response: "you name it without defending the delay. the name is plain. it leaves you with less room to hide.",
+      },
+      {
+        label: "keep it vague.",
+        response: "you protect every possibility by choosing none. the protection feels like a life from the inside.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "the life you keep postponing asks for a date.",
+    body: "not someday. a day. the calendar does not care whether you feel ready.",
+    intentional: true,
+    choices: [
+      {
+        label: "choose the day.",
+        response: "the date guarantees nothing. it removes one excuse.",
+      },
+      {
+        label: "leave the space blank.",
+        response: "the blank remains available. so does the life you already have.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "you reach the point where you usually turn back.",
+    body: "there is no sign. no witness. only the old instruction to stop.",
+    intentional: true,
+    choices: [
+      {
+        label: "continue.",
+        response: "you continue without becoming fearless. the fear comes with you. it is no longer in charge.",
+      },
+      {
+        label: "turn back.",
+        response: "you know this route. knowing it does not make it yours. you take it anyway.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
+    title: "no one is coming to authorize your life.",
+    body: "permission was useful while you believed it would arrive.",
+    intentional: true,
+    choices: [
+      {
+        label: "act without it.",
+        response: "nothing confirms the decision. you act. authority begins as the absence of permission.",
+      },
+      {
+        label: "wait once more.",
+        response: "you wait. this is also an act. the cost remains yours.",
+      },
+    ],
+  },
+  {
+    part: "III / RETURN",
     title: "you sit beside someone you love. neither of you speaks. the clock fills the silence.",
     body: "you have been here before. not here exactly. time does not circle, but you do. returning shows you what changed.",
     choices: [
@@ -352,6 +416,7 @@ export default function Home() {
   const [sessionNumber, setSessionNumber] = useState(1);
   const [previousPath, setPreviousPath] = useState<number[] | null>(null);
   const [routeChanges, setRouteChanges] = useState<number | null>(null);
+  const [pendingChoice, setPendingChoice] = useState<number | null>(null);
   const contextRef = useRef<AudioContext | null>(null);
   const musicRef = useRef<HTMLAudioElement | null>(null);
   const completionRecordedRef = useRef(false);
@@ -483,11 +548,17 @@ export default function Home() {
 
   function choose(choiceIndex: number) {
     if (!scene || reflection) return;
+    if (scene.intentional && pendingChoice !== choiceIndex) {
+      setPendingChoice(choiceIndex);
+      return;
+    }
+    setPendingChoice(null);
     setPath((p) => [...p, choiceIndex]);
     setReflection(scene.choices[choiceIndex].response ?? "you chose. now you will explain the choice to yourself.");
   }
 
   function advance() {
+    setPendingChoice(null);
     setReflection(null);
     setIndex((i) => i + 1);
   }
@@ -503,6 +574,7 @@ export default function Home() {
     setPath([]);
     setReflection(null);
     setFarewell(false);
+    setPendingChoice(null);
   }
 
   useEffect(() => {
@@ -591,7 +663,7 @@ export default function Home() {
           <p className="byline">by carm</p>
           <p className="lede">there is no correct path, but you can look for one and call the looking progress.</p>
           <button className="primary" onClick={begin}>[ ENTER SYSTEM ] <span>↵</span></button>
-          <p className="hint">20 SCENES · 8–10 MINUTES · LOCAL MEMORY ENABLED</p>
+          <p className="hint">{scenes.length} SCENES · 10–12 MINUTES · LOCAL MEMORY ENABLED</p>
         </section>
       ) : farewell ? (
         <section className="farewell">
@@ -605,7 +677,7 @@ export default function Home() {
           <p className="eyebrow">YOUR PATH / SESSION {String(sessionNumber).padStart(2, "0")} RECORD</p>
           <h1>YOU CHOSE.<br />TIME PASSED.</h1>
           <p className="closing">you act, you explain, you accuse yourself, then defend yourself. nothing is settled. you return to the beginning and find the room unchanged, but you are not. you are still here.</p>
-          <div className="route-summary"><span>20 RECORDS READ</span><span>{routeChanges === null ? "FIRST ROUTE RECORDED" : routeChanges === 0 ? "ROUTE REPEATED" : `NEW ROUTE · ${routeChanges} ${routeChanges === 1 ? "CHOICE" : "CHOICES"} CHANGED`}</span><span>SESSION SAVED: NOW</span></div>
+          <div className="route-summary"><span>{scenes.length} RECORDS READ</span><span>{routeChanges === null ? "FIRST ROUTE RECORDED" : routeChanges === 0 ? "ROUTE REPEATED" : `NEW ROUTE · ${routeChanges} ${routeChanges === 1 ? "CHOICE" : "CHOICES"} CHANGED`}</span><span>SESSION SAVED: NOW</span></div>
           <div className="pathline" aria-label="Your path">{path.map((p, i) => <i key={i} className={`${p === 0 ? "dim" : ""}${previousPath && previousPath[i] !== p ? " changed" : ""}`} />)}</div>
           <button className="primary" onClick={() => setFarewell(true)}>CLOSE SESSION <span>↵</span></button>
         </section>
@@ -618,14 +690,14 @@ export default function Home() {
             {scene.body && <TypeText key={`body-${index}`} as="p" className="bodycopy" text={scene.body} speed={38} />}
             <div className="choices">
               {scene.choices.map((choice, i) => (
-                <button key={choice.label} data-sound="selection" onClick={() => { playKeypadBeep(); choose(i); }}>
+                <button key={choice.label} className={pendingChoice === i ? "pending" : ""} data-sound="selection" onClick={() => { playKeypadBeep(); choose(i); }}>
                   <b>[0{i + 1}]</b>
-                  <span>{choice.label}</span>
+                  <span>{pendingChoice === i ? `confirm: ${choice.label}` : choice.label}</span>
                   <em>_</em>
                 </button>
               ))}
             </div>
-            <p className="hint">SELECT RECORD: PRESS 1–{scene.choices.length}</p>
+            <p className="hint">{scene.intentional ? pendingChoice === null ? "SELECT RECORD. PRESS AGAIN TO CONFIRM." : "CONFIRM OR CHOOSE AGAIN." : `SELECT RECORD: PRESS 1–${scene.choices.length}`}</p>
           </> : <div className="reflection">
             <p className="eyebrow">YOU CHOSE</p>
             <TypeText key={`result-${index}`} text={reflection} />
