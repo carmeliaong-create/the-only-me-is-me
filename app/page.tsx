@@ -16,7 +16,7 @@ const scenes: Scene[] = [
         response: "you were afraid. that is true. you loved them. that is also true. one truth does not cancel the other.",
       },
       {
-        label: "tell them: “you make me feel like i could stop running.”",
+        label: "tell them: “i feel safe with you.”",
         response: "you said it. now it exists outside you. this is what you wanted. you are still afraid.",
       },
     ],
