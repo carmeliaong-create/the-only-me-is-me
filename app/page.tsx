@@ -405,14 +405,14 @@ function TypeText({ text, as: Tag = "h2", className = "", speed = 86, onComplete
 
   useEffect(() => {
     const mobile = window.matchMedia("(max-width: 640px)").matches;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches && !mobile) {
-      setShown(text);
-      onCompleteRef.current?.();
-      return;
-    }
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     setShown("");
     let position = 0;
-    const intervalSpeed = mobile ? Math.min(speed, Tag === "p" ? 24 : 48) : speed;
+    const intervalSpeed = mobile
+      ? Math.min(speed, Tag === "p" ? 24 : 48)
+      : reducedMotion
+        ? Math.min(speed, Tag === "p" ? 28 : 52)
+        : speed;
     const timer = window.setInterval(() => {
       position += 1;
       setShown(text.slice(0, position));
@@ -504,11 +504,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    startMusic();
-    const resumeAutoplay = () => {
-      if (contextRef.current?.state === "suspended") void contextRef.current.resume();
-      if (musicRef.current) void musicRef.current.play();
-    };
+    const resumeAutoplay = () => startMusic();
     window.addEventListener("pointerdown", resumeAutoplay, { once: true });
     window.addEventListener("keydown", resumeAutoplay, { once: true });
     return () => {
